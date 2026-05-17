@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X, Plus, Trash2, Save } from 'lucide-react';
 import { Objective, KeyResult, OKRStatus, Quarter } from '@/lib/types';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useOKR } from '@/contexts/OKRContext';
 import { useObjectiveCRUD } from '@/hooks/useObjectiveCRUD';
 
 const STATUSES: OKRStatus[] = ['not-started', 'on-track', 'at-risk', 'behind', 'completed'];
@@ -36,9 +37,11 @@ interface AddObjectivePanelProps {
 
 export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const { settings } = useSettings();
+  const { data } = useOKR();
   const { saveObjective } = useObjectiveCRUD();
 
   const defaultTeam = settings.teams[0]?.id ?? '';
+  const allObjectives = data?.objectives ?? [];
 
   const [title, setTitle]           = useState('');
   const [description, setDescription] = useState('');
@@ -47,6 +50,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const [quarter, setQuarter]       = useState<Quarter>('Q2');
   const [status, setStatus]         = useState<OKRStatus>('not-started');
   const [tags, setTags]             = useState('');
+  const [parentId, setParentId]     = useState('');
   const [krs, setKrs]               = useState<KeyResult[]>([]);
 
   const updateKR = (idx: number, kr: KeyResult) =>
@@ -69,6 +73,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
       progress: computeProgress(krs),
       keyResults: krs,
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+      parentId: parentId || undefined,
     };
     saveObjective(obj);
     onClose();
@@ -132,6 +137,16 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
                 <label className="block text-[10px] text-slate-500 mb-1">Status</label>
                 <select value={status} onChange={e => setStatus(e.target.value as OKRStatus)} className={INPUT} style={SELECT_BG}>
                   {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                </select>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-[10px] text-slate-500 mb-1">Parent Objective (alignment)</label>
+                <select value={parentId} onChange={e => setParentId(e.target.value)}
+                  className={INPUT} style={SELECT_BG}>
+                  <option value="">— None (top-level) —</option>
+                  {allObjectives.map(o => (
+                    <option key={o.id} value={o.id}>{o.quarter}: {o.title.slice(0, 60)}</option>
+                  ))}
                 </select>
               </div>
               <div className="col-span-2">

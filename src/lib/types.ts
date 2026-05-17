@@ -1,6 +1,24 @@
 export type OKRStatus = 'on-track' | 'at-risk' | 'behind' | 'completed' | 'not-started';
+export type Confidence = 'on-track' | 'at-risk' | 'off-track';
 
 export type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+
+export interface CheckIn {
+  id: string;
+  date: string;           // ISO date string
+  previousValue: number;
+  newValue: number;
+  notes?: string;
+  confidence: Confidence;
+  author: string;
+}
+
+export interface Comment {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: string;      // ISO date string
+}
 
 export interface KeyResult {
   id: string;
@@ -14,6 +32,7 @@ export interface KeyResult {
   status: OKRStatus;
   progress: number; // 0-100
   lastUpdated: string;
+  checkIns?: CheckIn[];
 }
 
 export interface Objective {
@@ -28,6 +47,8 @@ export interface Objective {
   progress: number; // 0-100, computed from key results
   keyResults: KeyResult[];
   tags?: string[];
+  parentId?: string;      // alignment — links to a parent objective id
+  comments?: Comment[];
 }
 
 export interface Team {

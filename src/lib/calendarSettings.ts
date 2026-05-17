@@ -10,6 +10,11 @@ export interface TeamDef {
   description: string;
 }
 
+export interface CycleDateRange {
+  startDate: string;  // ISO date e.g. '2026-04-01'
+  endDate: string;    // ISO date e.g. '2026-06-30'
+}
+
 export interface AppSettings {
   // Calendar
   yearType: YearType;
@@ -22,6 +27,8 @@ export interface AppSettings {
   sidebarBg: string;     // hex, default '#0d1a2e'
 
   // OKR config
+  defaultCadence: 'quarterly' | 'yearly';
+  cycleDates: Partial<Record<'Q1' | 'Q2' | 'Q3' | 'Q4' | 'annual', CycleDateRange>>;
   okrScoring: 'percentage' | 'binary';
   checkInFrequency: 'weekly' | 'biweekly' | 'monthly';
   gradeGreen: number;    // 0–1, default 0.7
@@ -60,6 +67,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   companyName: 'Form3',
   accentColor: '#2acfc0',
   sidebarBg: '#0d1a2e',
+
+  defaultCadence: 'quarterly',
+  cycleDates: {}, // populated by user in Settings → OKR Config
 
   okrScoring: 'percentage',
   checkInFrequency: 'biweekly',
@@ -120,6 +130,38 @@ export function yearLabel(year: number, settings: AppSettings): string {
     case 'range': return `${year - 1}/${short2}`;
     default: return `FY${short2}`;
   }
+}
+
+/**
+ * Compute the calendar start/end dates for each quarter given a fiscal year start month and year.
+ * year = the FY year label (e.g. 2026 means the FY that contains April 2026).
+ */
+export function computeDefaultCycleDates(
+  fyStartMonth: number,
+  year: number,
+): Record<'Q1' | 'Q2' | 'Q3' | 'Q4' | 'annual', CycleDateRange> {
+  function quarterStart(q: 1 | 2 | 3 | 4): Date {
+    const month0 = (fyStartMonth - 1 + (q - 1) * 3) % 12; // 0-based
+    const yr = fyStartMonth + (q - 1) * 3 > 12 ? year + 1 : year;
+    // if start month itself wraps into next calendar year, adjust
+    const calMonth = month0; // 0-based
+    const calYear = (fyStartMonth - 1 + (q - 1) * 3) >= 12 ? year + 1 : year;
+    return new Date(calYear, calMonth, 1);
+  }
+  function quarterEnd(q: 1 | 2 | 3 | 4): Date {
+    const nextQ = q === 4 ? 1 : (q + 1) as 1|2|3|4;
+    const start = quarterStart(nextQ);
+    return new Date(start.getTime() - 86400000); // day before next quarter
+  }
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+
+  return {
+    Q1: { startDate: fmt(quarterStart(1)), endDate: fmt(quarterEnd(1)) },
+    Q2: { startDate: fmt(quarterStart(2)), endDate: fmt(quarterEnd(2)) },
+    Q3: { startDate: fmt(quarterStart(3)), endDate: fmt(quarterEnd(3)) },
+    Q4: { startDate: fmt(quarterStart(4)), endDate: fmt(quarterEnd(4)) },
+    annual: { startDate: fmt(quarterStart(1)), endDate: fmt(quarterEnd(4)) },
+  };
 }
 
 /** Returns the current Quarter based on today's date and calendar settings */

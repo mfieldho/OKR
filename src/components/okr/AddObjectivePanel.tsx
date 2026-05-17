@@ -6,7 +6,7 @@ import { Objective, KeyResult, OKRStatus, Quarter, OKRCadence } from '@/lib/type
 import { useSettings } from '@/contexts/SettingsContext';
 import { useOKR } from '@/contexts/OKRContext';
 import { useObjectiveCRUD } from '@/hooks/useObjectiveCRUD';
-import { currentQuarter } from '@/lib/calendarSettings';
+import { currentQuarter, computeDefaultCycleDates } from '@/lib/calendarSettings';
 
 const STATUSES: OKRStatus[] = ['not-started', 'on-track', 'at-risk', 'behind', 'completed'];
 const STATUS_LABELS: Record<OKRStatus, string> = {
@@ -44,28 +44,56 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const defaultTeam = settings.teams[0]?.id ?? '';
   const allObjectives = data?.objectives ?? [];
 
+  const defaultCadence = settings.defaultCadence ?? 'quarterly';
+  const defaultQ = currentQuarter(settings);
+  const defaultQuarters: Quarter[] = defaultCadence === 'yearly' ? ['Q1', 'Q2', 'Q3', 'Q4'] : [defaultQ];
+
+  function datesForQuarters(qs: Quarter[]): { start: string; end: string } {
+    const computed = computeDefaultCycleDates(settings.fyStartMonth, 2026);
+    if (qs.length === 4 || qs.includes('Q1') && qs.includes('Q4')) {
+      const annual = settings.cycleDates?.annual ?? computed.annual;
+      return { start: annual.startDate, end: annual.endDate };
+    }
+    const first = qs[0] as 'Q1'|'Q2'|'Q3'|'Q4';
+    const last = qs[qs.length - 1] as 'Q1'|'Q2'|'Q3'|'Q4';
+    const startRange = settings.cycleDates?.[first] ?? computed[first];
+    const endRange = settings.cycleDates?.[last] ?? computed[last];
+    return { start: startRange.startDate, end: endRange.endDate };
+  }
+
+  const initialDates = datesForQuarters(defaultQuarters);
+
   const [title, setTitle]               = useState('');
   const [description, setDescription]   = useState('');
   const [owner, setOwner]               = useState('');
   const [teamId, setTeamId]             = useState(defaultTeam);
-  const [cadence, setCadence]           = useState<OKRCadence>('quarterly');
-  const [selectedQuarters, setSelectedQuarters] = useState<Quarter[]>(() => [currentQuarter(settings)]);
-  const [startDate, setStartDate]       = useState('');
-  const [endDate, setEndDate]           = useState('');
+  const [cadence, setCadence]           = useState<OKRCadence>(defaultCadence);
+  const [selectedQuarters, setSelectedQuarters] = useState<Quarter[]>(defaultQuarters);
+  const [startDate, setStartDate]       = useState(initialDates.start);
+  const [endDate, setEndDate]           = useState(initialDates.end);
   const [status, setStatus]             = useState<OKRStatus>('not-started');
   const [tags, setTags]                 = useState('');
   const [parentId, setParentId]         = useState('');
   const [krs, setKrs]                   = useState<KeyResult[]>([]);
 
+  const applyDatesForQuarters = (qs: Quarter[]) => {
+    const d = datesForQuarters(qs);
+    setStartDate(d.start);
+    setEndDate(d.end);
+  };
+
   const toggleQuarter = (q: Quarter) => {
     if (cadence === 'quarterly') {
       setSelectedQuarters([q]);
+      applyDatesForQuarters([q]);
     } else {
-      setSelectedQuarters(prev =>
-        prev.includes(q)
+      setSelectedQuarters(prev => {
+        const next = prev.includes(q)
           ? prev.length > 1 ? prev.filter(x => x !== q) : prev
-          : [...prev, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b))
-      );
+          : [...prev, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b));
+        applyDatesForQuarters(next);
+        return next;
+      });
     }
   };
 
@@ -165,7 +193,9 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
                       <button key={c} type="button"
                         onClick={() => {
                           setCadence(c);
-                          setSelectedQuarters(c === 'yearly' ? ['Q1', 'Q2', 'Q3', 'Q4'] : [selectedQuarters[0] ?? 'Q1']);
+                          const qs: Quarter[] = c === 'yearly' ? ['Q1', 'Q2', 'Q3', 'Q4'] : [selectedQuarters[0] ?? 'Q1'];
+                          setSelectedQuarters(qs);
+                          applyDatesForQuarters(qs);
                         }}
                         className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
                         style={cadence === c

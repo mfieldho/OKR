@@ -10,7 +10,6 @@ import { ProgressTrendChart } from '@/components/charts/ProgressTrendChart';
 import { TeamComparisonChart } from '@/components/charts/TeamComparisonChart';
 import { StatusDonutChart } from '@/components/charts/StatusDonutChart';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
-import { OKRViewSwitcher } from '@/components/okr/OKRViewSwitcher';
 
 export default function CompanyDashboard() {
   const { data, loading, error } = useOKR();
@@ -114,17 +113,6 @@ export default function CompanyDashboard() {
 
         {/* Team comparison chart */}
         <TeamComparisonChart teams={data.teams} />
-
-        {/* Company objectives — multi-view */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-semibold text-white">All Objectives</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Click any objective to see its key results</p>
-            </div>
-          </div>
-          <OKRViewSwitcher objectives={data.objectives} />
-        </section>
 
       </div>
     </div>

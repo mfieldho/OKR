@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, User, TrendingUp, Settings,
   RefreshCw, Wifi, WifiOff, X,
-  Columns3, LayoutGrid, AlignLeft, Table2, Users2, GitBranch,
+  Columns3, LayoutGrid, AlignLeft, Table2, Users2, GitBranch, Layers,
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -15,11 +15,12 @@ import { cn } from '@/lib/utils';
 import { Form3Logo } from '@/components/ui/Form3Logo';
 
 const nav = [
-  { href: '/', label: 'Company', icon: LayoutDashboard },
-  { href: '/teams', label: 'Teams', icon: Users },
-  { href: '/individuals', label: 'Individuals', icon: User },
-  { href: '/trends', label: 'Trends', icon: TrendingUp },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/',            label: 'Company',     icon: LayoutDashboard },
+  { href: '/views',       label: 'Views',       icon: Layers          },
+  { href: '/teams',       label: 'Teams',       icon: Users           },
+  { href: '/individuals', label: 'Individuals', icon: User            },
+  { href: '/trends',      label: 'Trends',      icon: TrendingUp      },
+  { href: '/settings',    label: 'Settings',    icon: Settings        },
 ];
 
 const VIEW_OPTIONS: { id: OKRView; Icon: React.ComponentType<{ size: number }>; label: string }[] = [
@@ -37,7 +38,7 @@ export function Sidebar() {
   const { dataSource } = useSettings();
   const { view, setView } = useOKRView();
   const { open, close } = useSidebar();
-  const isDashboard = pathname === '/';
+  const isViewsPage = pathname === '/views';
 
   return (
     <>
@@ -113,8 +114,8 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* OKR View selector — dashboard only */}
-        {isDashboard && (
+        {/* OKR View selector — views page only */}
+        {isViewsPage && (
           <div className="px-3 pb-3 border-t border-white/[0.05] pt-3 flex-1 overflow-y-auto">
             <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-2">OKR Views</p>
             <div className="space-y-0.5">

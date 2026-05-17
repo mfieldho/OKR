@@ -6,6 +6,7 @@ import { Objective, KeyResult, OKRStatus, Quarter, OKRCadence } from '@/lib/type
 import { useSettings } from '@/contexts/SettingsContext';
 import { useOKR } from '@/contexts/OKRContext';
 import { useObjectiveCRUD } from '@/hooks/useObjectiveCRUD';
+import { currentQuarter } from '@/lib/calendarSettings';
 
 const STATUSES: OKRStatus[] = ['not-started', 'on-track', 'at-risk', 'behind', 'completed'];
 const STATUS_LABELS: Record<OKRStatus, string> = {
@@ -48,7 +49,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const [owner, setOwner]               = useState('');
   const [teamId, setTeamId]             = useState(defaultTeam);
   const [cadence, setCadence]           = useState<OKRCadence>('quarterly');
-  const [selectedQuarters, setSelectedQuarters] = useState<Quarter[]>(['Q2']);
+  const [selectedQuarters, setSelectedQuarters] = useState<Quarter[]>(() => [currentQuarter(settings)]);
   const [startDate, setStartDate]       = useState('');
   const [endDate, setEndDate]           = useState('');
   const [status, setStatus]             = useState<OKRStatus>('not-started');

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { CompanyOKR, Quarter } from '@/lib/types';
 import { buildCompanyOKR } from '@/lib/mockData';
 import { useSettings } from '@/contexts/SettingsContext';
+import { currentQuarter } from '@/lib/calendarSettings';
 
 interface OKRContextValue {
   data: CompanyOKR | null;
@@ -21,7 +22,7 @@ export function OKRProvider({ children }: { children: React.ReactNode }) {
   const { settings } = useSettings();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedQuarter, setSelectedQuarter] = useState<Quarter>('Q2');
+  const [selectedQuarter, setSelectedQuarter] = useState<Quarter>(() => currentQuarter(settings));
   const [isUsingLiveData] = useState(false);
 
   const loadData = useCallback(async () => {

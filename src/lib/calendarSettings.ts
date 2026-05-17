@@ -122,6 +122,17 @@ export function yearLabel(year: number, settings: AppSettings): string {
   }
 }
 
+/** Returns the current Quarter based on today's date and calendar settings */
+export function currentQuarter(settings: AppSettings): import('./types').Quarter {
+  const month = new Date().getMonth() + 1; // 1-based
+  for (const q of [1, 2, 3, 4] as const) {
+    if (quarterMonths(q, settings).includes(month as 1|2|3|4|5|6|7|8|9|10|11|12)) {
+      return `Q${q}` as import('./types').Quarter;
+    }
+  }
+  return 'Q1';
+}
+
 export const MONTH_NAMES = MONTH_SHORT;
 
 export const MONTH_FULL = [

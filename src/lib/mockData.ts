@@ -166,12 +166,12 @@ export const form3AnnualObjectives: Objective[] = [
     startDate: '2026-04-01',
     endDate: '2027-03-31',
     status: 'on-track',
-    progress: 100,
+    progress: 100,  // avg(100, 99) ≈ 100
     tags: ['customer', 'cpi', 'service'],
     keyResults: [
       {
         id: 'fy27-kr-4-1',
-        title: 'Maintain a Customer Performance Index (CPI) of ≥80%',
+        title: 'Maintain Customer Performance Index (CPI) of ≥80%',
         owner: 'CCO',
         target: 80,
         current: 80,
@@ -179,6 +179,18 @@ export const form3AnnualObjectives: Objective[] = [
         dueDate: '2027-03-31',
         status: 'on-track',
         progress: 100,
+        lastUpdated: '2026-04-30',
+      },
+      {
+        id: 'fy27-kr-4-2',
+        title: 'Maintain CPI satisfaction score ≥7.8 (out of 10)',
+        owner: 'CCO',
+        target: 8.0,
+        current: 7.9,
+        unit: 'score',
+        dueDate: '2027-03-31',
+        status: 'on-track',
+        progress: 99,
         lastUpdated: '2026-04-30',
       },
     ],

@@ -1,33 +1,53 @@
 'use client';
 
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Calendar } from 'lucide-react';
 import { Objective } from '@/lib/types';
 import { StatusBadge } from '@/components/ui/Badge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useOKR } from '@/contexts/OKRContext';
 
+function CadencePill({ obj }: { obj: Objective }) {
+  const qs = obj.quarters ?? [obj.quarter];
+  const span = qs.length > 1 ? `${qs[0]}–${qs[qs.length - 1]}` : qs[0];
+  const yearly = obj.cadence === 'yearly';
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold w-fit"
+        style={yearly
+          ? { background: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.2)' }
+          : { background: 'rgba(59,130,246,0.10)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.2)' }}>
+        {yearly ? 'Yearly' : 'Quarterly'}
+      </span>
+      <span className="text-[10px] text-slate-500 flex items-center gap-0.5">
+        <Calendar size={8} /> {span}
+      </span>
+    </div>
+  );
+}
+
 export function ListView({ objectives, onSelect }: { objectives: Objective[]; onSelect: (o: Objective) => void }) {
   const { data } = useOKR();
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] overflow-x-auto" style={{ background: 'rgba(22,38,64,0.5)', WebkitOverflowScrolling: 'touch' }}><div style={{ minWidth: 600 }}>
+    <div className="rounded-2xl border border-white/[0.06] overflow-x-auto" style={{ background: 'rgba(22,38,64,0.5)', WebkitOverflowScrolling: 'touch' }}><div style={{ minWidth: 700 }}>
       {/* Header row */}
       <div className="grid items-center px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-semibold uppercase tracking-wider text-slate-600"
-        style={{ gridTemplateColumns: '140px 1fr 130px 140px 90px 32px' }}>
+        style={{ gridTemplateColumns: '130px 1fr 110px 120px 110px 90px 32px' }}>
         <span>Status</span>
         <span>Objective</span>
         <span>Team</span>
         <span>Owner</span>
+        <span>Cadence</span>
         <span className="text-right">Progress</span>
         <span />
       </div>
 
-      {objectives.map((obj, i) => {
+      {objectives.map((obj) => {
         const team = data?.teams.find(t => t.id === obj.teamId);
         return (
           <button key={obj.id} onClick={() => onSelect(obj)}
             className="w-full text-left grid items-center px-4 py-3.5 border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors group"
-            style={{ gridTemplateColumns: '140px 1fr 130px 140px 90px 32px' }}>
+            style={{ gridTemplateColumns: '130px 1fr 110px 120px 110px 90px 32px' }}>
             <div><StatusBadge status={obj.status} /></div>
 
             <p className="text-sm text-slate-200 font-medium group-hover:text-[#2acfc0] transition-colors truncate pr-4">
@@ -44,6 +64,8 @@ export function ListView({ objectives, onSelect }: { objectives: Objective[]; on
             </div>
 
             <p className="text-xs text-slate-500 truncate pr-4">{obj.owner || '—'}</p>
+
+            <CadencePill obj={obj} />
 
             <div className="flex items-center gap-2">
               <div className="flex-1"><ProgressBar progress={obj.progress} height={3} /></div>

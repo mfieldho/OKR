@@ -5,7 +5,13 @@ import { StatusBadge } from '@/components/ui/Badge';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { progressColor } from '@/lib/utils';
 import { useOKR } from '@/contexts/OKRContext';
-import { MessageSquare, Activity, Tag } from 'lucide-react';
+import { MessageSquare, Activity, Calendar } from 'lucide-react';
+
+function timingLabel(obj: Objective) {
+  const qs = obj.quarters ?? [obj.quarter];
+  const span = qs.length > 1 ? `${qs[0]}–${qs[qs.length - 1]}` : qs[0];
+  return span;
+}
 
 function GridCard({ objective, onSelect }: { objective: Objective; onSelect: () => void }) {
   const { data } = useOKR();
@@ -67,6 +73,25 @@ function GridCard({ objective, onSelect }: { objective: Objective; onSelect: () 
               ))}
             </div>
           )}
+        </div>
+
+        {/* Timing row */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold"
+            style={objective.cadence === 'yearly'
+              ? { background: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.2)' }
+              : { background: 'rgba(59,130,246,0.10)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.2)' }}>
+            {objective.cadence === 'yearly' ? 'Yearly' : 'Quarterly'}
+          </span>
+          <span className="text-[10px] text-slate-500 flex items-center gap-1">
+            <Calendar size={9} />
+            {timingLabel(objective)} {objective.year}
+            {objective.startDate && objective.endDate && (
+              <span className="text-slate-600 ml-1">
+                {objective.startDate.slice(0, 7)} → {objective.endDate.slice(0, 7)}
+              </span>
+            )}
+          </span>
         </div>
 
         {/* Footer */}

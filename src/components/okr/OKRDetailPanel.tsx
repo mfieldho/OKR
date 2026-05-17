@@ -424,97 +424,12 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                       className={INPUT} style={SELECT_BG}>
                       {allTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                     </select></div>
-                  <div><label className="block text-[10px] text-slate-500 mb-1">Status</label>
+                  <div className="col-span-2"><label className="block text-[10px] text-slate-500 mb-1">Status</label>
                     <select value={draft.status} onChange={e => setDraft(d => ({ ...d, status: e.target.value as OKRStatus }))}
                       className={INPUT} style={SELECT_BG}>
                       {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                     </select></div>
-                  <div className="col-span-2 space-y-3 rounded-xl border border-white/[0.07] p-3"
-                    style={{ background: 'rgba(255,255,255,0.02)' }}>
-                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Timing</p>
-                    {/* Cadence */}
-                    <div>
-                      <label className="block text-[10px] text-slate-500 mb-1.5">Cadence</label>
-                      <div className="flex gap-2">
-                        {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
-                          <button key={c} type="button"
-                            onClick={() => {
-                              const newCadence = c;
-                              const newQuarters = newCadence === 'yearly'
-                                ? (['Q1','Q2','Q3','Q4'] as Quarter[])
-                                : [draft.quarter ?? 'Q1'];
-                              setDraft(d => ({ ...d, cadence: newCadence, quarters: newQuarters }));
-                            }}
-                            className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
-                            style={(draft.cadence ?? 'quarterly') === c
-                              ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
-                              : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
-                            {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Quarter multi-select */}
-                    <div>
-                      <label className="block text-[10px] text-slate-500 mb-1.5">
-                        {(draft.cadence ?? 'quarterly') === 'yearly' ? 'Quarters covered' : 'Quarter'}
-                      </label>
-                      <div className="flex gap-1.5">
-                        {QUARTERS.map(q => {
-                          const draftQuarters = draft.quarters ?? [draft.quarter];
-                          const active = draftQuarters.includes(q);
-                          return (
-                            <button key={q} type="button"
-                              onClick={() => {
-                                const cur = draft.quarters ?? [draft.quarter];
-                                const isYearly = (draft.cadence ?? 'quarterly') === 'yearly';
-                                let next: Quarter[];
-                                if (isYearly) {
-                                  next = cur.includes(q)
-                                    ? cur.length > 1 ? cur.filter(x => x !== q) : cur
-                                    : [...cur, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b));
-                                } else {
-                                  next = [q];
-                                }
-                                setDraft(d => ({ ...d, quarter: next[0], quarters: next }));
-                              }}
-                              className="flex-1 py-2 rounded-lg text-xs font-bold transition-all"
-                              style={active
-                                ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
-                                : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
-                              {q}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    {/* Start / End dates */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div><label className="block text-[10px] text-slate-500 mb-1">Start date</label>
-                        <input type="date" value={draft.startDate ?? ''}
-                          onChange={e => setDraft(d => ({ ...d, startDate: e.target.value || undefined }))}
-                          className={INPUT} style={INPUT_BG} /></div>
-                      <div><label className="block text-[10px] text-slate-500 mb-1">End date</label>
-                        <input type="date" value={draft.endDate ?? ''}
-                          onChange={e => setDraft(d => ({ ...d, endDate: e.target.value || undefined }))}
-                          className={INPUT} style={INPUT_BG} /></div>
-                    </div>
-                  </div>
                 </div>
-                <div><label className="block text-[10px] text-slate-500 mb-1">Parent Objective (alignment)</label>
-                  <select value={draft.parentId ?? ''} onChange={e => setDraft(d => ({ ...d, parentId: e.target.value || undefined }))}
-                    className={INPUT} style={SELECT_BG}>
-                    <option value="">— None (top-level) —</option>
-                    {allObjectives.map(o => <option key={o.id} value={o.id}>{o.quarter}: {o.title.slice(0, 60)}</option>)}
-                  </select></div>
-                <div><label className="block text-[10px] text-slate-500 mb-1">Description</label>
-                  <textarea value={draft.description ?? ''} rows={2}
-                    onChange={e => setDraft(d => ({ ...d, description: e.target.value }))}
-                    placeholder="Optional description" className={`w-full resize-none text-sm ${INPUT}`} style={INPUT_BG} /></div>
-                <div><label className="block text-[10px] text-slate-500 mb-1">Tags (comma-separated)</label>
-                  <input value={(draft.tags ?? []).join(', ')}
-                    onChange={e => setDraft(d => ({ ...d, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) }))}
-                    placeholder="e.g. platform, reliability" className={INPUT} style={INPUT_BG} /></div>
               </div>
             ) : (
               <>
@@ -650,6 +565,114 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
 
         {/* ── Tab content ── */}
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
+
+          {/* TIMING + metadata section (edit mode only, in scrollable body) */}
+          {editing && (
+            <>
+              {/* Timing card */}
+              <div className="rounded-2xl border border-white/[0.07] p-4 space-y-3"
+                style={{ background: 'rgba(255,255,255,0.02)' }}>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Timing</p>
+
+                {/* Cadence toggle */}
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1.5">Cadence</label>
+                  <div className="flex gap-2">
+                    {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
+                      <button key={c} type="button"
+                        onClick={() => {
+                          const newQuarters: Quarter[] = c === 'yearly'
+                            ? ['Q1', 'Q2', 'Q3', 'Q4']
+                            : [draft.quarter ?? 'Q1'];
+                          setDraft(d => ({ ...d, cadence: c, quarters: newQuarters }));
+                        }}
+                        className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                        style={(draft.cadence ?? 'quarterly') === c
+                          ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                          : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                        {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quarter multi-select */}
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1.5">
+                    {(draft.cadence ?? 'quarterly') === 'yearly' ? 'Quarters covered' : 'Quarter'}
+                  </label>
+                  <div className="flex gap-1.5">
+                    {QUARTERS.map(q => {
+                      const draftQuarters = draft.quarters ?? [draft.quarter];
+                      const active = draftQuarters.includes(q);
+                      return (
+                        <button key={q} type="button"
+                          onClick={() => {
+                            const cur = draft.quarters ?? [draft.quarter];
+                            const isYearly = (draft.cadence ?? 'quarterly') === 'yearly';
+                            let next: Quarter[];
+                            if (isYearly) {
+                              next = cur.includes(q)
+                                ? cur.length > 1 ? cur.filter(x => x !== q) : cur
+                                : [...cur, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b));
+                            } else {
+                              next = [q];
+                            }
+                            setDraft(d => ({ ...d, quarter: next[0], quarters: next }));
+                          }}
+                          className="flex-1 py-2 rounded-lg text-xs font-bold transition-all"
+                          style={active
+                            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                          {q}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Start / End dates */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] text-slate-500 mb-1">Start date</label>
+                    <input type="date" value={draft.startDate ?? ''}
+                      onChange={e => setDraft(d => ({ ...d, startDate: e.target.value || undefined }))}
+                      className={INPUT} style={INPUT_BG} />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-500 mb-1">End date</label>
+                    <input type="date" value={draft.endDate ?? ''}
+                      onChange={e => setDraft(d => ({ ...d, endDate: e.target.value || undefined }))}
+                      className={INPUT} style={INPUT_BG} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Description, Tags, Parent */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1">Parent Objective (alignment)</label>
+                  <select value={draft.parentId ?? ''} onChange={e => setDraft(d => ({ ...d, parentId: e.target.value || undefined }))}
+                    className={INPUT} style={SELECT_BG}>
+                    <option value="">— None (top-level) —</option>
+                    {allObjectives.map(o => <option key={o.id} value={o.id}>{o.quarter}: {o.title.slice(0, 60)}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1">Description</label>
+                  <textarea value={draft.description ?? ''} rows={2}
+                    onChange={e => setDraft(d => ({ ...d, description: e.target.value }))}
+                    placeholder="Optional description" className={`w-full resize-none text-sm ${INPUT}`} style={INPUT_BG} />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1">Tags (comma-separated)</label>
+                  <input value={(draft.tags ?? []).join(', ')}
+                    onChange={e => setDraft(d => ({ ...d, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) }))}
+                    placeholder="e.g. profitability, revenue" className={INPUT} style={INPUT_BG} />
+                </div>
+              </div>
+            </>
+          )}
 
           {/* KEY RESULTS tab (also edit mode) */}
           {(tab === 'overview' || editing) && (

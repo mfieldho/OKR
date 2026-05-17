@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown, ChevronRight } from 'lucide-react';
 import { Objective } from '@/lib/types';
+import { Calendar } from 'lucide-react';
 import { StatusBadge } from '@/components/ui/Badge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useOKR } from '@/contexts/OKRContext';
@@ -80,6 +81,11 @@ export function TableView({ objectives, onSelect }: { objectives: Objective[]; o
             <th className="px-4 py-3 text-left w-36">
               <SortHeader label="Owner" sortKey="owner" current={sortKey} dir={dir} onSort={handleSort} />
             </th>
+            <th className="px-4 py-3 text-left w-32">
+              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+                <Calendar size={10} /> Cadence
+              </span>
+            </th>
             <th className="px-4 py-3 text-center w-16">
               <SortHeader label="KRs" sortKey="krs" current={sortKey} dir={dir} onSort={handleSort} />
             </th>
@@ -114,6 +120,24 @@ export function TableView({ objectives, onSelect }: { objectives: Objective[]; o
                   ) : <span className="text-xs text-slate-600">—</span>}
                 </td>
                 <td className="px-4 py-3 text-xs text-slate-400 truncate">{obj.owner || '—'}</td>
+                <td className="px-4 py-3">
+                  {(() => {
+                    const qs = obj.quarters ?? [obj.quarter];
+                    const span = qs.length > 1 ? `${qs[0]}–${qs[qs.length-1]}` : qs[0];
+                    const yearly = obj.cadence === 'yearly';
+                    return (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold w-fit"
+                          style={yearly
+                            ? { background: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.2)' }
+                            : { background: 'rgba(59,130,246,0.10)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.2)' }}>
+                          {yearly ? 'Yearly' : 'Quarterly'}
+                        </span>
+                        <span className="text-[10px] text-slate-500">{span}</span>
+                      </div>
+                    );
+                  })()}
+                </td>
                 <td className="px-4 py-3 text-center">
                   <span className="text-xs font-medium text-slate-400">{obj.keyResults.length}</span>
                 </td>

@@ -4,13 +4,13 @@ import { Target, TrendingUp, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { Header } from '@/components/layout/Header';
 import { StatCard } from '@/components/dashboard/StatCard';
-import { OKRCard } from '@/components/dashboard/OKRCard';
 import { TeamCard } from '@/components/dashboard/TeamCard';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { ProgressTrendChart } from '@/components/charts/ProgressTrendChart';
 import { TeamComparisonChart } from '@/components/charts/TeamComparisonChart';
 import { StatusDonutChart } from '@/components/charts/StatusDonutChart';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { OKRViewSwitcher } from '@/components/okr/OKRViewSwitcher';
 
 export default function CompanyDashboard() {
   const { data, loading, error } = useOKR();
@@ -115,19 +115,15 @@ export default function CompanyDashboard() {
         {/* Team comparison chart */}
         <TeamComparisonChart teams={data.teams} />
 
-        {/* Company objectives */}
+        {/* Company objectives — multi-view */}
         <section>
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-semibold text-white">All Objectives</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Expand any objective to see key results</p>
+              <p className="text-xs text-slate-500 mt-0.5">Click any objective to see its key results</p>
             </div>
           </div>
-          <div className="space-y-3">
-            {data.objectives.map((obj, i) => (
-              <OKRCard key={obj.id} objective={obj} defaultOpen={i === 0} />
-            ))}
-          </div>
+          <OKRViewSwitcher objectives={data.objectives} />
         </section>
 
       </div>

@@ -275,8 +275,9 @@ export const buildCompanyOKR = (
   quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4',
   year: number,
   teamsOverride?: TeamDef[],
+  objectivesOverride?: Objective[],
 ) => {
-  const objectives = allObjectives[quarter] ?? [];
+  const objectives = objectivesOverride ?? allObjectives[quarter] ?? [];
   const defs = teamsOverride ?? teamDefs;
 
   const teams: Team[] = defs.map(def => {

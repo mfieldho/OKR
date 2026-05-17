@@ -41,8 +41,9 @@ export function OKRProvider({ children }: { children: React.ReactNode }) {
   // Recompute derived data whenever the selected quarter or teams settings change
   const data = useMemo<CompanyOKR | null>(() => {
     if (loading) return null;
-    return buildCompanyOKR(selectedQuarter, 2026, settings.teams);
-  }, [selectedQuarter, loading, settings.teams]);
+    const customObjs = settings.customObjectives?.[selectedQuarter];
+    return buildCompanyOKR(selectedQuarter, 2026, settings.teams, customObjs);
+  }, [selectedQuarter, loading, settings.teams, settings.customObjectives]);
 
   return (
     <OKRContext.Provider value={{ data, loading, error, selectedQuarter, setSelectedQuarter, isUsingLiveData, refresh: loadData }}>

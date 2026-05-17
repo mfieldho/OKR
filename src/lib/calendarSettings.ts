@@ -47,6 +47,9 @@ export interface AppSettings {
     driveId: string;
     fileId: string;
   };
+
+  // Custom OKR data — null means use built-in demo data
+  customObjectives: Record<string, import('./types').Objective[]> | null;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -86,6 +89,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     driveId:  process.env.NEXT_PUBLIC_SHAREPOINT_DRIVE_ID ?? '',
     fileId:   process.env.NEXT_PUBLIC_SHAREPOINT_FILE_ID ?? '',
   },
+
+  customObjectives: null,
 };
 
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

@@ -3,15 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
-import { Palette, Calendar, Users, Target, Plug, Database } from 'lucide-react';
+import { Palette, Calendar, Users, Target, Plug, Database, ListTodo } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { href: '/settings/branding',     label: 'Branding',        icon: Palette  },
-  { href: '/settings/calendar',     label: 'Calendar',        icon: Calendar },
-  { href: '/settings/teams',        label: 'Teams',           icon: Users    },
-  { href: '/settings/okrs',         label: 'OKRs',            icon: Target   },
-  { href: '/settings/integrations', label: 'Integrations',    icon: Plug     },
-  { href: '/settings/data',         label: 'Data Connection', icon: Database },
+  { href: '/settings/branding',     label: 'Branding',        icon: Palette   },
+  { href: '/settings/calendar',     label: 'Calendar',        icon: Calendar  },
+  { href: '/settings/teams',        label: 'Teams',           icon: Users     },
+  { href: '/settings/objectives',   label: 'Objectives',      icon: ListTodo  },
+  { href: '/settings/okrs',         label: 'OKR Config',      icon: Target    },
+  { href: '/settings/integrations', label: 'Integrations',    icon: Plug      },
+  { href: '/settings/data',         label: 'Data Connection', icon: Database  },
 ];
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {

@@ -50,9 +50,14 @@ export function ListView({ objectives, onSelect }: { objectives: Objective[]; on
             style={{ gridTemplateColumns: '130px 1fr 110px 120px 110px 90px 32px' }}>
             <div><StatusBadge status={obj.status} /></div>
 
-            <p className="text-sm text-slate-200 font-medium group-hover:text-[#2acfc0] transition-colors truncate pr-4">
-              {obj.title}
-            </p>
+            <div className="pr-4 min-w-0">
+              <p className="text-sm text-slate-200 font-medium group-hover:text-[#2acfc0] transition-colors truncate">
+                {obj.title}
+              </p>
+              {obj.description && (
+                <p className="text-[10px] text-slate-500 truncate mt-0.5">{obj.description}</p>
+              )}
+            </div>
 
             <div className="pr-3">
               {team ? (

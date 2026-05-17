@@ -148,10 +148,17 @@ function KanbanCard({ objective, accentColor, onSelect }: {
             <div className="w-2 h-2 rounded-full" style={{ background: accentColor, boxShadow: `0 0 6px ${accentColor}` }} />
           </div>
 
-          {/* Title */}
-          <p className="text-xs font-semibold text-slate-100 leading-snug mb-3 line-clamp-3 group-hover:text-[#2acfc0] transition-colors">
-            {objective.title}
-          </p>
+          {/* Title + description */}
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-slate-100 leading-snug group-hover:text-[#2acfc0] transition-colors">
+              {objective.title}
+            </p>
+            {objective.description && (
+              <p className="text-[10px] text-slate-500 mt-1 leading-snug line-clamp-2">
+                {objective.description}
+              </p>
+            )}
+          </div>
 
           {/* Progress */}
           <ProgressBar progress={objective.progress} height={3} />
@@ -277,8 +284,11 @@ export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; 
                   <div className="w-2.5 h-2.5 rounded-full shrink-0 mt-0.5"
                     style={{ background: accent, boxShadow: `0 0 8px ${accent}88` }} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-slate-200 leading-snug line-clamp-2">{obj.title}</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">{obj.progress}% · {obj.keyResults.length} KRs</p>
+                    <p className="text-xs font-semibold text-slate-200 leading-snug">{obj.title}</p>
+                    {obj.description && (
+                      <p className="text-[10px] text-slate-500 mt-0.5 leading-snug line-clamp-2">{obj.description}</p>
+                    )}
+                    <p className="text-[10px] text-slate-600 mt-1">{obj.progress}% · {obj.keyResults.length} KRs</p>
                   </div>
                 </div>
 

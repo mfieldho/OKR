@@ -9,7 +9,8 @@ import { TeamDef } from './calendarSettings';
 export const form3AnnualObjectives: Objective[] = [
   {
     id: 'fy27-obj-1',
-    title: 'Deliver FY27 profitability with disciplined execution and financial control',
+    title: 'Profitability',
+    description: 'Deliver FY27 profitability with disciplined execution and financial control',
     owner: 'CFO',
     teamId: 'profitability',
     quarter: 'Q1',
@@ -38,7 +39,8 @@ export const form3AnnualObjectives: Objective[] = [
   },
   {
     id: 'fy27-obj-2',
-    title: 'Accelerate revenue by increasing customer value & acquiring high value clients',
+    title: 'Revenue',
+    description: 'Accelerate revenue by increasing customer value & acquiring high value clients',
     owner: 'CRO',
     teamId: 'revenue',
     quarter: 'Q1',
@@ -91,7 +93,8 @@ export const form3AnnualObjectives: Objective[] = [
   },
   {
     id: 'fy27-obj-3',
-    title: 'Reallocate investment to high-impact, high growth initiatives',
+    title: 'Operational Efficiency',
+    description: 'Reallocate investment to high-impact, high growth initiatives',
     owner: 'COO',
     teamId: 'ops-efficiency',
     quarter: 'Q1',
@@ -156,7 +159,8 @@ export const form3AnnualObjectives: Objective[] = [
   },
   {
     id: 'fy27-obj-4',
-    title: 'Build a high-performing customer engine that wins, onboards and delivers brilliant service',
+    title: 'Customer',
+    description: 'Build a high-performing customer engine that wins, onboards and delivers brilliant service',
     owner: 'CCO',
     teamId: 'customer',
     quarter: 'Q1',
@@ -197,7 +201,8 @@ export const form3AnnualObjectives: Objective[] = [
   },
   {
     id: 'fy27-obj-5',
-    title: 'Build a consistently high-performing organisation for talent, performance, and engagement',
+    title: 'Our People',
+    description: 'Build a consistently high-performing organisation for talent, performance, and engagement',
     owner: 'CPO',
     teamId: 'people',
     quarter: 'Q1',
@@ -250,7 +255,8 @@ export const form3AnnualObjectives: Objective[] = [
   },
   {
     id: 'fy27-obj-6',
-    title: 'Drive a culture of operational excellence and compliance',
+    title: 'Quality',
+    description: 'Drive a culture of operational excellence and compliance',
     owner: 'CTO',
     teamId: 'quality',
     quarter: 'Q1',

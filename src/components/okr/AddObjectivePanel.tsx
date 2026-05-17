@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X, Plus, Trash2, Save } from 'lucide-react';
-import { Objective, KeyResult, OKRStatus, Quarter } from '@/lib/types';
+import { Objective, KeyResult, OKRStatus, Quarter, OKRCadence } from '@/lib/types';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useOKR } from '@/contexts/OKRContext';
 import { useObjectiveCRUD } from '@/hooks/useObjectiveCRUD';
@@ -48,6 +48,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const [owner, setOwner]           = useState('');
   const [teamId, setTeamId]         = useState(defaultTeam);
   const [quarter, setQuarter]       = useState<Quarter>('Q2');
+  const [cadence, setCadence]       = useState<OKRCadence>('quarterly');
   const [status, setStatus]         = useState<OKRStatus>('not-started');
   const [tags, setTags]             = useState('');
   const [parentId, setParentId]     = useState('');
@@ -69,6 +70,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
       teamId,
       quarter,
       year: 2026,
+      cadence,
       status,
       progress: computeProgress(krs),
       keyResults: krs,
@@ -138,6 +140,20 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
                 <select value={status} onChange={e => setStatus(e.target.value as OKRStatus)} className={INPUT} style={SELECT_BG}>
                   {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                 </select>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-[10px] text-slate-500 mb-2">Cadence</label>
+                <div className="flex gap-2">
+                  {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
+                    <button key={c} type="button" onClick={() => setCadence(c)}
+                      className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                      style={cadence === c
+                        ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                        : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                      {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="col-span-2">
                 <label className="block text-[10px] text-slate-500 mb-1">Parent Objective (alignment)</label>

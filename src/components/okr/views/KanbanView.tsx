@@ -1,20 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { Objective, OKRStatus } from '@/lib/types';
+import { Objective, KeyResult, OKRStatus } from '@/lib/types';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { StatusBadge } from '@/components/ui/Badge';
+import { progressColor } from '@/lib/utils';
 import { useOKR } from '@/contexts/OKRContext';
 import { MessageSquare, Activity } from 'lucide-react';
 
 // ─── Group-by types ───────────────────────────────────────────────────────────
 
-type GroupBy = 'status' | 'team' | 'owner' | 'quarter';
+type GroupBy = 'status' | 'team' | 'owner' | 'quarter' | 'okr';
 
 const GROUP_OPTIONS: { id: GroupBy; label: string }[] = [
   { id: 'status',  label: 'Status'  },
   { id: 'team',    label: 'Team'    },
   { id: 'owner',   label: 'Owner'   },
   { id: 'quarter', label: 'Quarter' },
+  { id: 'okr',     label: 'By OKR'  },
 ];
 
 // ─── Status column definitions ────────────────────────────────────────────────
@@ -85,6 +88,9 @@ function buildColumns(groupBy: GroupBy, objectives: Objective[], teams: { id: st
         ...c,
         objectives: objectives.filter(o => o.quarter === c.id),
       })).filter(c => c.objectives.length > 0);
+
+    default:
+      return [];
   }
 }
 
@@ -181,6 +187,50 @@ function KanbanCard({ objective, accentColor, onSelect }: {
   );
 }
 
+// ─── KR card (used in By OKR mode) ───────────────────────────────────────────
+
+function KRCard({ kr, accentColor, onSelect }: {
+  kr: KeyResult;
+  accentColor: string;
+  onSelect: () => void;
+}) {
+  const color = progressColor(kr.progress);
+  return (
+    <button onClick={onSelect} className="w-full text-left group focus:outline-none">
+      <div
+        className="rounded-xl border overflow-hidden transition-all duration-200 hover:-translate-y-0.5 p-3"
+        style={{
+          background: 'linear-gradient(145deg, rgba(22,38,64,0.95) 0%, rgba(15,27,50,0.95) 100%)',
+          borderColor: 'rgba(255,255,255,0.07)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLElement).style.borderColor = `${accentColor}40`;
+          (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 24px rgba(0,0,0,0.3), 0 0 0 1px ${accentColor}20`;
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)';
+          (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        }}
+      >
+        <p className="text-[11px] font-semibold text-slate-100 leading-snug mb-2.5 line-clamp-2 group-hover:text-[#2acfc0] transition-colors">
+          {kr.title}
+        </p>
+        <ProgressBar progress={kr.progress} height={3} />
+        <div className="flex items-center justify-between mt-2.5">
+          <StatusBadge status={kr.status} />
+          <span className="text-[10px] font-bold" style={{ color }}>
+            {kr.current}{kr.unit} / {kr.target}{kr.unit}
+          </span>
+        </div>
+        {kr.owner && (
+          <p className="text-[10px] text-slate-600 mt-1.5 truncate">{kr.owner}</p>
+        )}
+      </div>
+    </button>
+  );
+}
+
 // ─── Main view ────────────────────────────────────────────────────────────────
 
 export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; onSelect: (o: Objective) => void }) {
@@ -188,35 +238,94 @@ export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; 
   const teams = data?.teams ?? [];
   const [groupBy, setGroupBy] = useState<GroupBy>('status');
 
-  const columns = buildColumns(groupBy, objectives, teams);
+  const columns = groupBy !== 'okr' ? buildColumns(groupBy, objectives, teams) : [];
 
+  const groupBySelector = (
+    <div className="flex items-center gap-2 mb-4 flex-wrap">
+      <span className="text-xs text-slate-500 font-medium">Group by:</span>
+      {GROUP_OPTIONS.map(opt => (
+        <button
+          key={opt.id}
+          onClick={() => setGroupBy(opt.id)}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
+          style={groupBy === opt.id
+            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.3)' }
+            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  // ── By OKR: columns = objectives, cards = key results ──
+  if (groupBy === 'okr') {
+    return (
+      <div>
+        {groupBySelector}
+        <div
+          className="flex gap-4 pb-4 -mx-1 px-1"
+          style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        >
+          {objectives.map(obj => {
+            const team = teams.find(t => t.id === obj.teamId);
+            const accent = team?.color ?? '#2acfc0';
+            return (
+              <div key={obj.id} className="shrink-0 flex flex-col" style={{ width: 252 }}>
+                {/* Column header = objective */}
+                <div className="flex items-start gap-2 px-1 mb-3">
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0 mt-0.5"
+                    style={{ background: accent, boxShadow: `0 0 8px ${accent}88` }} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-slate-200 leading-snug line-clamp-2">{obj.title}</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">{obj.progress}% · {obj.keyResults.length} KRs</p>
+                  </div>
+                </div>
+
+                {/* Column body = key results */}
+                <div
+                  className="flex-1 rounded-2xl p-2 space-y-2 min-h-48 border border-white/[0.04]"
+                  style={{ background: accent + '0d' }}
+                >
+                  {obj.keyResults.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-8 gap-2">
+                      <div className="w-6 h-6 rounded-full border border-dashed border-white/[0.12]" />
+                      <p className="text-[10px] text-slate-700">No key results</p>
+                    </div>
+                  ) : (
+                    obj.keyResults.map(kr => (
+                      <KRCard
+                        key={kr.id}
+                        kr={kr}
+                        accentColor={accent}
+                        onSelect={() => onSelect(obj)}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          {objectives.length === 0 && (
+            <div className="flex-1 flex items-center justify-center py-16">
+              <p className="text-slate-600 text-sm">No objectives to display.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Standard board ──
   return (
     <div>
-      {/* Group-by selector */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <span className="text-xs text-slate-500 font-medium">Group by:</span>
-        {GROUP_OPTIONS.map(opt => (
-          <button
-            key={opt.id}
-            onClick={() => setGroupBy(opt.id)}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
-            style={groupBy === opt.id
-              ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.3)' }
-              : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Board */}
+      {groupBySelector}
       <div
         className="flex gap-4 pb-4 -mx-1 px-1"
         style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
         {columns.map(col => (
           <div key={col.id} className="shrink-0 flex flex-col" style={{ width: 252 }}>
-            {/* Column header */}
             <div className="flex items-center gap-2.5 px-1 mb-3">
               <div className="w-2.5 h-2.5 rounded-full shrink-0"
                 style={{ background: col.accent, boxShadow: `0 0 8px ${col.accent}88` }} />
@@ -226,8 +335,6 @@ export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; 
                 {col.objectives.length}
               </span>
             </div>
-
-            {/* Column body */}
             <div
               className="flex-1 rounded-2xl p-2 space-y-2 min-h-48 border border-white/[0.04]"
               style={{ background: col.glow }}
@@ -250,7 +357,6 @@ export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; 
             </div>
           </div>
         ))}
-
         {columns.length === 0 && (
           <div className="flex-1 flex items-center justify-center py-16">
             <p className="text-slate-600 text-sm">No objectives to display.</p>

@@ -1,5 +1,6 @@
 export type OKRStatus = 'on-track' | 'at-risk' | 'behind' | 'completed' | 'not-started';
 export type Confidence = 'on-track' | 'at-risk' | 'off-track';
+export type OKRCadence = 'quarterly' | 'yearly';
 
 export type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
 
@@ -43,6 +44,7 @@ export interface Objective {
   teamId: string;
   quarter: Quarter;
   year: number;
+  cadence?: OKRCadence;   // 'quarterly' (default) or 'yearly'
   status: OKRStatus;
   progress: number; // 0-100, computed from key results
   keyResults: KeyResult[];

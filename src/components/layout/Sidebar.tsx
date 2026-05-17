@@ -4,12 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, User, TrendingUp, Settings,
-  RefreshCw, Wifi, WifiOff, X,
-  Columns3, LayoutGrid, AlignLeft, Table2, Users2, GitBranch, Layers,
+  RefreshCw, Wifi, WifiOff, X, Layers,
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useOKRView, OKRView } from '@/contexts/OKRViewContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
 import { Form3Logo } from '@/components/ui/Form3Logo';
@@ -23,22 +21,12 @@ const nav = [
   { href: '/settings',    label: 'Settings',    icon: Settings        },
 ];
 
-const VIEW_OPTIONS: { id: OKRView; Icon: React.ComponentType<{ size: number }>; label: string }[] = [
-  { id: 'kanban', Icon: Columns3,   label: 'Kanban'    },
-  { id: 'grid',   Icon: LayoutGrid, label: 'Grid'      },
-  { id: 'list',   Icon: AlignLeft,  label: 'List'      },
-  { id: 'table',  Icon: Table2,     label: 'Table'     },
-  { id: 'team',   Icon: Users2,     label: 'By Team'   },
-  { id: 'tree',   Icon: GitBranch,  label: 'Alignment' },
-];
 
 export function Sidebar() {
   const pathname = usePathname();
   const { data, loading, isUsingLiveData, refresh } = useOKR();
   const { dataSource } = useSettings();
-  const { view, setView } = useOKRView();
   const { open, close } = useSidebar();
-  const isViewsPage = pathname === '/views';
 
   return (
     <>
@@ -92,7 +80,7 @@ export function Sidebar() {
         )}
 
         {/* Navigation */}
-        <nav className="px-3 py-4 space-y-0.5 shrink-0">
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
           <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-2">Navigate</p>
           {nav.map(({ href, label, icon: Icon }) => {
             const active = pathname === href || (href !== '/' && pathname.startsWith(href));
@@ -114,32 +102,6 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* OKR View selector — views page only */}
-        {isViewsPage && (
-          <div className="px-3 pb-3 border-t border-white/[0.05] pt-3 flex-1 overflow-y-auto">
-            <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-2">OKR Views</p>
-            <div className="space-y-0.5">
-              {VIEW_OPTIONS.map(({ id, Icon, label }) => (
-                <button
-                  key={id}
-                  onClick={() => { setView(id); close(); }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
-                  style={view === id
-                    ? { background: 'rgba(42,207,192,0.1)', color: '#2acfc0', boxShadow: 'inset 0 0 0 1px rgba(42,207,192,0.2)' }
-                    : { color: '#475569' }}
-                  onMouseEnter={e => { if (view !== id) (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
-                  onMouseLeave={e => { if (view !== id) (e.currentTarget as HTMLElement).style.color = '#475569'; }}
-                >
-                  <Icon size={14} />
-                  <span>{label}</span>
-                  {view === id && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#2acfc0] shrink-0" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-white/[0.06] shrink-0">

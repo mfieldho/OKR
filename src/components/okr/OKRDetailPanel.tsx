@@ -5,7 +5,7 @@ import {
   X, Pencil, Trash2, Plus, Save, XCircle, User, Calendar, TrendingUp, Tag,
   MessageSquare, Activity, Link2, ChevronDown, ChevronUp, Send,
 } from 'lucide-react';
-import { Objective, KeyResult, OKRStatus, Quarter, CheckIn, Comment, Confidence } from '@/lib/types';
+import { Objective, KeyResult, OKRStatus, Quarter, OKRCadence, CheckIn, Comment, Confidence } from '@/lib/types';
 import { StatusBadge } from '@/components/ui/Badge';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -434,6 +434,21 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                       className={INPUT} style={SELECT_BG}>
                       {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                     </select></div>
+                  <div className="col-span-2">
+                    <label className="block text-[10px] text-slate-500 mb-2">Cadence</label>
+                    <div className="flex gap-2">
+                      {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
+                        <button key={c} type="button"
+                          onClick={() => setDraft(d => ({ ...d, cadence: c }))}
+                          className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                          style={(draft.cadence ?? 'quarterly') === c
+                            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                          {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div><label className="block text-[10px] text-slate-500 mb-1">Parent Objective (alignment)</label>
                   <select value={draft.parentId ?? ''} onChange={e => setDraft(d => ({ ...d, parentId: e.target.value || undefined }))}
@@ -461,6 +476,17 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                     </span>
                   )}
                   <span className="text-xs text-slate-600">{objective.quarter} {objective.year}</span>
+                  {objective.cadence === 'yearly' ? (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                      style={{ background: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.3)' }}>
+                      Yearly
+                    </span>
+                  ) : (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                      style={{ background: 'rgba(59,130,246,0.12)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.25)' }}>
+                      Quarterly
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-[15px] font-semibold text-white leading-snug">{objective.title}</h2>
                 <p className="text-xs text-slate-500 mt-1.5">Owner: {objective.owner}</p>

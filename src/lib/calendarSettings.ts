@@ -78,11 +78,12 @@ export const DEFAULT_SETTINGS: AppSettings = {
   showConfidence: true,
 
   teams: [
-    { id: 'platform',    name: 'Platform & Infrastructure', lead: 'Sarah Mitchell', color: '#6366f1', memberCount: 18, description: 'Core infrastructure, reliability, and platform engineering' },
-    { id: 'product',     name: 'Product',                   lead: 'Marcus Webb',    color: '#06b6d4', memberCount: 12, description: 'Product strategy, roadmap, and payment scheme expansion' },
-    { id: 'commercial',  name: 'Commercial',                lead: 'Priya Sharma',   color: '#10b981', memberCount: 22, description: 'Sales, partnerships, and revenue growth' },
-    { id: 'engineering', name: 'Engineering',               lead: 'Alex Torres',    color: '#f59e0b', memberCount: 35, description: 'Developer experience, SDK, and technical delivery' },
-    { id: 'risk',        name: 'Risk & Compliance',         lead: 'Nina Okonkwo',   color: '#ef4444', memberCount: 9,  description: 'Regulatory compliance, risk management, and fraud prevention' },
+    { id: 'profitability',  name: 'Profitability',          lead: 'CFO',  color: '#ef4444', memberCount: 8,  description: 'Deliver FY27 profitability with disciplined execution and financial control' },
+    { id: 'revenue',        name: 'Revenue',                lead: 'CRO',  color: '#f59e0b', memberCount: 25, description: 'Accelerate revenue by increasing customer value & acquiring high value clients' },
+    { id: 'ops-efficiency', name: 'Operational Efficiency', lead: 'COO',  color: '#10b981', memberCount: 20, description: 'Reallocate investment to high-impact, high growth initiatives' },
+    { id: 'customer',       name: 'Customer',               lead: 'CCO',  color: '#06b6d4', memberCount: 15, description: 'Build a high-performing customer engine that wins, onboards and delivers brilliant service' },
+    { id: 'people',         name: 'Our People',             lead: 'CPO',  color: '#8b5cf6', memberCount: 10, description: 'Build a consistently high-performing organisation for talent, performance, and engagement' },
+    { id: 'quality',        name: 'Quality',                lead: 'CTO',  color: '#6366f1', memberCount: 30, description: 'Drive a culture of operational excellence and compliance' },
   ],
 
   slack:       { enabled: false, webhookUrl: '' },

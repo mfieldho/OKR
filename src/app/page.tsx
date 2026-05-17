@@ -44,19 +44,19 @@ export default function CompanyDashboard() {
         subtitle={`${data.quarter} ${data.year} · ${data.objectives.length} objectives across ${data.teams.length} teams`}
       />
 
-      <div className="p-8 space-y-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
 
         {/* Hero: overall progress + stats */}
-        <div className="flex items-start gap-8">
+        <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8">
           {/* Progress ring */}
-          <div className="rounded-2xl border border-white/[0.06] p-6 flex flex-col items-center justify-center gap-2 shrink-0"
+          <div className="rounded-2xl border border-white/[0.06] p-6 flex flex-col items-center justify-center gap-2 shrink-0 w-full sm:w-auto"
             style={{ background: 'rgba(30,45,76,0.5)', minWidth: 180 }}>
             <ProgressRing progress={data.overallProgress} size={140} strokeWidth={12} label="Overall" sublabel="Q2 2026" />
             <p className="text-xs text-slate-500 mt-1">Company progress</p>
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-4 flex-1">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 flex-1 w-full">
             <StatCard
               label="Objectives total"
               value={data.objectives.length}
@@ -90,8 +90,8 @@ export default function CompanyDashboard() {
         </div>
 
         {/* Charts row */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
             <ProgressTrendChart />
           </div>
           <StatusDonutChart objectives={data.objectives} />
@@ -105,7 +105,7 @@ export default function CompanyDashboard() {
               <p className="text-xs text-slate-500 mt-0.5">Click a team to drill into their objectives</p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4">
             {data.teams.map(team => (
               <TeamCard key={team.id} team={team} />
             ))}

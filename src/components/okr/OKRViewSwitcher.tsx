@@ -10,6 +10,7 @@ import { GridView }       from './views/GridView';
 import { ListView }       from './views/ListView';
 import { TableView }      from './views/TableView';
 import { TeamBoardView }  from './views/TeamBoardView';
+import { TreeView }       from './views/TreeView';
 import { OKRDetailPanel } from './OKRDetailPanel';
 import { AddObjectivePanel } from './AddObjectivePanel';
 import { ImportPanel }    from './ImportPanel';
@@ -215,6 +216,7 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
       {view === 'list'   && <ListView      objectives={filtered} onSelect={setSelected} />}
       {view === 'table'  && <TableView     objectives={filtered} onSelect={setSelected} />}
       {view === 'team'   && <TeamBoardView objectives={filtered} onSelect={setSelected} />}
+      {view === 'tree'   && <TreeView      objectives={filtered} onSelect={setSelected} />}
 
       {/* ── Panels ── */}
       {selected  && <OKRDetailPanel   objective={selected}   onClose={() => setSelected(null)} />}

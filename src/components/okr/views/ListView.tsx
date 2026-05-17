@@ -10,7 +10,7 @@ export function ListView({ objectives, onSelect }: { objectives: Objective[]; on
   const { data } = useOKR();
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'rgba(22,38,64,0.5)' }}>
+    <div className="rounded-2xl border border-white/[0.06] overflow-x-auto" style={{ background: 'rgba(22,38,64,0.5)', WebkitOverflowScrolling: 'touch' }}><div style={{ minWidth: 600 }}>
       {/* Header row */}
       <div className="grid items-center px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-semibold uppercase tracking-wider text-slate-600"
         style={{ gridTemplateColumns: '140px 1fr 130px 140px 90px 32px' }}>
@@ -58,6 +58,6 @@ export function ListView({ objectives, onSelect }: { objectives: Objective[]; on
       {objectives.length === 0 && (
         <div className="py-10 text-center text-slate-600 text-sm">No objectives found.</div>
       )}
-    </div>
+    </div></div>
   );
 }

@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type OKRView = 'kanban' | 'grid' | 'list' | 'table' | 'team';
-export const ALL_VIEWS: OKRView[] = ['kanban', 'grid', 'list', 'table', 'team'];
+export type OKRView = 'kanban' | 'grid' | 'list' | 'table' | 'team' | 'tree';
+export const ALL_VIEWS: OKRView[] = ['kanban', 'grid', 'list', 'table', 'team', 'tree'];
 const STORAGE_KEY = 'form3-okr-view';
 
 interface OKRViewContextValue {

@@ -30,7 +30,7 @@ export function StatusDonutChart({ objectives }: StatusDonutChartProps) {
   }));
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(26,34,54,0.5)' }}>
+    <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
       <p className="text-sm font-semibold text-white mb-1">Objective Status</p>
       <p className="text-xs text-slate-500 mb-4">Distribution across all company objectives</p>
       <div className="flex items-center gap-6">

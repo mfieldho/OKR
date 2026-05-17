@@ -16,7 +16,7 @@ export default function TeamDetailPage({ params }: { params: Promise<{ teamId: s
   const { teamId } = use(params);
   const { data, loading } = useOKR();
 
-  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(11,15,30,0.85)' }} /><LoadingSkeleton /></>;
+  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} /><LoadingSkeleton /></>;
   if (!data) return null;
 
   const team = data.teams.find(t => t.id === teamId);
@@ -38,7 +38,7 @@ export default function TeamDetailPage({ params }: { params: Promise<{ teamId: s
         {/* Hero */}
         <div className="flex items-start gap-6">
           <div className="rounded-2xl border border-white/[0.06] p-6 flex flex-col items-center gap-3 shrink-0"
-            style={{ background: 'rgba(26,34,54,0.5)', minWidth: 180 }}>
+            style={{ background: 'rgba(30,45,76,0.5)', minWidth: 180 }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center"
               style={{ background: `${team.color}18`, border: `1px solid ${team.color}30` }}>
               <Users size={22} style={{ color: team.color }} />
@@ -47,15 +47,15 @@ export default function TeamDetailPage({ params }: { params: Promise<{ teamId: s
           </div>
 
           <div className="grid grid-cols-3 gap-4 flex-1">
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(26,34,54,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
               <p className="text-2xl font-bold text-white">{team.objectives.length}</p>
               <p className="text-sm text-slate-400 mt-1">Objectives</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(26,34,54,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
               <p className="text-2xl font-bold text-emerald-400">{onTrack}</p>
               <p className="text-sm text-slate-400 mt-1">On track</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(26,34,54,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
               <p className="text-2xl font-bold text-white">{allKRs.length}</p>
               <p className="text-sm text-slate-400 mt-1">Key results</p>
             </div>

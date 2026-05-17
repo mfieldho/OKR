@@ -17,7 +17,7 @@ export default function CompanyDashboard() {
 
   if (loading) return (
     <div className="flex-1">
-      <div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(11,15,30,0.85)' }} />
+      <div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} />
       <LoadingSkeleton />
     </div>
   );
@@ -50,7 +50,7 @@ export default function CompanyDashboard() {
         <div className="flex items-start gap-8">
           {/* Progress ring */}
           <div className="rounded-2xl border border-white/[0.06] p-6 flex flex-col items-center justify-center gap-2 shrink-0"
-            style={{ background: 'rgba(26,34,54,0.5)', minWidth: 180 }}>
+            style={{ background: 'rgba(30,45,76,0.5)', minWidth: 180 }}>
             <ProgressRing progress={data.overallProgress} size={140} strokeWidth={12} label="Overall" sublabel="Q2 2026" />
             <p className="text-xs text-slate-500 mt-1">Company progress</p>
           </div>
@@ -62,7 +62,7 @@ export default function CompanyDashboard() {
               value={data.objectives.length}
               sub={`across ${data.teams.length} teams`}
               icon={Target}
-              color="#00c8b4"
+              color="#2acfc0"
               trend={{ value: 12, label: 'vs Q1' }}
             />
             <StatCard

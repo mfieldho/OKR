@@ -15,7 +15,7 @@ export function Header({ title, subtitle }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between px-8 py-5 border-b border-white/[0.06] sticky top-0 z-10"
-      style={{ background: 'rgba(11,15,30,0.85)', backdropFilter: 'blur(12px)' }}>
+      style={{ background: 'rgba(13,26,46,0.90)', backdropFilter: 'blur(12px)' }}>
       <div>
         <h1 className="text-lg font-semibold text-white leading-none">{title}</h1>
         {subtitle && <p className="text-sm text-slate-400 mt-1">{subtitle}</p>}
@@ -28,7 +28,7 @@ export function Header({ title, subtitle }: HeaderProps) {
             <button key={q} onClick={() => setSelectedQuarter(q)}
               className="px-3 py-1 rounded-md text-xs font-medium transition-all duration-150"
               style={selectedQuarter === q
-                ? { background: 'rgba(0,200,180,0.15)', color: '#00c8b4', boxShadow: 'inset 0 0 0 1px rgba(0,200,180,0.25)' }
+                ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', boxShadow: 'inset 0 0 0 1px rgba(42,207,192,0.25)' }
                 : { color: '#64748b' }}>
               {q}
             </button>

@@ -12,7 +12,7 @@ import { progressColor } from '@/lib/utils';
 export default function IndividualsPage() {
   const { data, loading } = useOKR();
 
-  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(11,15,30,0.85)' }} /><LoadingSkeleton /></>;
+  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} /><LoadingSkeleton /></>;
   if (!data) return null;
 
   return (
@@ -20,7 +20,7 @@ export default function IndividualsPage() {
       <Header title="Individuals" subtitle={`${data.individuals.length} people · ${data.quarter} ${data.year}`} />
 
       <div className="p-8">
-        <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'rgba(26,34,54,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'rgba(30,45,76,0.5)' }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/[0.06]">

@@ -18,7 +18,7 @@ export function OKRCard({ objective, defaultOpen = false }: OKRCardProps) {
 
   return (
     <div className="rounded-2xl border border-white/[0.06] hover:border-white/10 transition-all duration-200 overflow-hidden"
-      style={{ background: 'rgba(26,34,54,0.5)' }}>
+      style={{ background: 'rgba(30,45,76,0.5)' }}>
       {/* Header */}
       <button className="w-full text-left px-5 py-4 flex items-center gap-4" onClick={() => setOpen(!open)}>
         <ProgressRing progress={objective.progress} size={64} strokeWidth={6} color={progressColor(objective.progress)} />

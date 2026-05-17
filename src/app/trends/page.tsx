@@ -11,7 +11,7 @@ import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 export default function TrendsPage() {
   const { data, loading } = useOKR();
 
-  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(11,15,30,0.85)' }} /><LoadingSkeleton /></>;
+  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} /><LoadingSkeleton /></>;
   if (!data) return null;
 
   const allKRs = data.objectives.flatMap(o => o.keyResults);
@@ -30,7 +30,7 @@ export default function TrendsPage() {
         <TeamComparisonChart />
 
         {/* Key result breakdown */}
-        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(26,34,54,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
           <p className="text-sm font-semibold text-white mb-1">Key Results Deep Dive</p>
           <p className="text-xs text-slate-500 mb-5">All {allKRs.length} key results · avg {avgKRProgress}% complete</p>
           <div className="space-y-3">

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { cn } from '@/lib/utils';
+import { Form3Logo } from '@/components/ui/Form3Logo';
 
 const nav = [
   { href: '/', label: 'Company', icon: LayoutDashboard },
@@ -28,20 +29,12 @@ export function Sidebar() {
 
   return (
     <aside className="w-60 shrink-0 flex flex-col h-screen sticky top-0 border-r border-white/[0.06]"
-      style={{ background: 'rgba(11,15,30,0.95)', backdropFilter: 'blur(12px)' }}>
+      style={{ background: 'rgba(13,26,46,0.97)', backdropFilter: 'blur(12px)' }}>
 
       {/* Logo */}
       <div className="px-5 pt-6 pb-5 border-b border-white/[0.06]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #00c8b4, #3b82f6)' }}>
-            <span className="text-white font-bold text-xs">F3</span>
-          </div>
-          <div>
-            <p className="text-white font-semibold text-sm leading-none">Form3</p>
-            <p className="text-slate-500 text-xs mt-0.5">OKR Platform</p>
-          </div>
-        </div>
+        <Form3Logo height={24} />
+        <p className="text-slate-500 text-xs mt-2">OKR Platform</p>
       </div>
 
       {/* Quarter badge */}
@@ -50,7 +43,7 @@ export function Sidebar() {
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-500">Current cycle</span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(0,200,180,0.12)', color: '#00c8b4', border: '1px solid rgba(0,200,180,0.2)' }}>
+              style={{ background: 'rgba(42,207,192,0.12)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.2)' }}>
               {data.quarter} {data.year}
             </span>
           </div>
@@ -69,7 +62,7 @@ export function Sidebar() {
                   ? 'text-white'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
               )}
-              style={active ? { background: 'rgba(0,200,180,0.1)', color: '#00c8b4', boxShadow: 'inset 0 0 0 1px rgba(0,200,180,0.15)' } : {}}>
+              style={active ? { background: 'rgba(42,207,192,0.1)', color: '#2acfc0', boxShadow: 'inset 0 0 0 1px rgba(42,207,192,0.15)' } : {}}>
               <Icon size={16} />
               {label}
             </Link>

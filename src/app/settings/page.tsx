@@ -61,14 +61,14 @@ export default function SettingsPage() {
         </div>
 
         {/* Azure AD config */}
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(26,34,54,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
           <p className="text-sm font-semibold text-white">Azure AD / Microsoft 365</p>
           {field('Tenant ID', 'tenantId', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')}
           {field('Client ID (Application ID)', 'clientId', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')}
         </div>
 
         {/* SharePoint config */}
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(26,34,54,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
           <p className="text-sm font-semibold text-white">SharePoint / OneDrive File</p>
           {field('SharePoint Site URL', 'siteUrl', 'https://form3.sharepoint.com/sites/okr', 'The site where your Excel file lives')}
           {field('Table name in Excel', 'listName', 'OKRTable', 'Must match the named table in your workbook')}
@@ -77,7 +77,7 @@ export default function SettingsPage() {
         </div>
 
         {/* .env.local snippet */}
-        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(26,34,54,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
           <p className="text-sm font-semibold text-white mb-3">Generated .env.local</p>
           <pre className="text-xs text-teal-400 leading-relaxed overflow-x-auto p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.3)' }}>
 {`NEXT_PUBLIC_AZURE_TENANT_ID=${form.tenantId || '<your-tenant-id>'}
@@ -91,7 +91,7 @@ NEXT_PUBLIC_SHAREPOINT_FILE_ID=${form.fileId || ''}`}
 
         <button onClick={handleSave}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{ background: saved ? 'rgba(16,185,129,0.2)' : 'rgba(0,200,180,0.15)', color: saved ? '#10b981' : '#00c8b4', border: `1px solid ${saved ? 'rgba(16,185,129,0.3)' : 'rgba(0,200,180,0.25)'}` }}>
+          style={{ background: saved ? 'rgba(16,185,129,0.2)' : 'rgba(42,207,192,0.15)', color: saved ? '#10b981' : '#2acfc0', border: `1px solid ${saved ? 'rgba(16,185,129,0.3)' : 'rgba(42,207,192,0.25)'}` }}>
           <Save size={15} />
           {saved ? 'Copied to clipboard!' : 'Copy .env.local values'}
         </button>

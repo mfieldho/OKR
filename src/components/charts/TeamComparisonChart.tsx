@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { valu
 
 export function TeamComparisonChart() {
   return (
-    <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(26,34,54,0.5)' }}>
+    <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
       <p className="text-sm font-semibold text-white mb-1">Team Progress</p>
       <p className="text-xs text-slate-500 mb-5">OKR completion by team this quarter</p>
       <ResponsiveContainer width="100%" height={200}>

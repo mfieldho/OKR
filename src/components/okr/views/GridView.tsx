@@ -24,7 +24,7 @@ function GridCard({ objective, onSelect }: { objective: Objective; onSelect: () 
     <button onClick={onSelect}
       className="text-left group w-full rounded-2xl overflow-hidden border border-white/[0.06] transition-all duration-200 hover:-translate-y-1 focus:outline-none flex flex-col"
       style={{
-        background: 'rgba(14,26,50,0.9)',
+        background: 'var(--card-bg)',
         boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
       }}
       onMouseEnter={e => {

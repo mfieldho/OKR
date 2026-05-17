@@ -78,11 +78,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return () => { cancelled = true; };
   }, []);
 
-  // ── CSS variables ─────────────────────────────────────────────────────────────
+  // ── CSS variables + theme ────────────────────────────────────────────────────
   useEffect(() => {
     document.documentElement.style.setProperty('--accent', settings.accentColor);
     document.documentElement.style.setProperty('--sidebar-bg', settings.sidebarBg);
-  }, [settings.accentColor, settings.sidebarBg]);
+    document.documentElement.dataset.theme = settings.colorScheme ?? 'dark';
+  }, [settings.accentColor, settings.sidebarBg, settings.colorScheme]);
 
   // ── Save ──────────────────────────────────────────────────────────────────────
   const updateSettings = useCallback((patch: Partial<AppSettings>) => {

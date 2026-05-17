@@ -117,7 +117,7 @@ function KanbanCard({ objective, accentColor, onSelect }: {
       <div
         className="relative rounded-xl border overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
         style={{
-          background: 'linear-gradient(145deg, rgba(22,38,64,0.95) 0%, rgba(15,27,50,0.95) 100%)',
+          background: 'var(--card-bg)',
           borderColor: 'rgba(255,255,255,0.07)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
         }}
@@ -207,7 +207,7 @@ function KRCard({ kr, accentColor, onSelect }: {
       <div
         className="rounded-xl border overflow-hidden transition-all duration-200 hover:-translate-y-0.5 p-3"
         style={{
-          background: 'linear-gradient(145deg, rgba(22,38,64,0.95) 0%, rgba(15,27,50,0.95) 100%)',
+          background: 'var(--card-bg)',
           borderColor: 'rgba(255,255,255,0.07)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
         }}

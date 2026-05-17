@@ -16,8 +16,8 @@ const STATUS_LABELS: Record<OKRStatus, string> = {
 const QUARTERS: Quarter[] = ['Q1', 'Q2', 'Q3', 'Q4'];
 
 const INPUT = "w-full px-3 py-2 rounded-xl text-sm text-white placeholder-slate-600 border border-white/[0.08] focus:border-white/20 focus:outline-none transition-colors";
-const INPUT_BG: React.CSSProperties = { background: 'rgba(255,255,255,0.04)' };
-const SELECT_BG: React.CSSProperties = { background: 'rgba(20,35,60,0.95)' };
+const INPUT_BG: React.CSSProperties = { background: 'var(--input-bg)' };
+const SELECT_BG: React.CSSProperties = { background: 'var(--select-bg)' };
 
 function blankKR(): KeyResult {
   return {
@@ -133,7 +133,7 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
         onClick={onClose} />
 
       <div className="fixed right-0 top-0 h-full z-50 flex flex-col border-l border-white/[0.08] shadow-2xl"
-        style={{ width: 'min(560px, 100vw)', background: 'rgba(10,20,38,0.99)', backdropFilter: 'blur(20px)' }}>
+        style={{ width: 'min(560px, 100vw)', background: 'var(--panel-bg)', backdropFilter: 'blur(20px)' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">

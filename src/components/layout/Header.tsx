@@ -24,7 +24,7 @@ export function Header({ title, subtitle }: HeaderProps) {
   return (
     <header
       className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/[0.06] sticky top-0 z-10 gap-3"
-      style={{ background: 'rgba(13,26,46,0.92)', backdropFilter: 'blur(12px)' }}
+      style={{ background: 'var(--header-bg)', backdropFilter: 'blur(12px)' }}
     >
       {/* Left: hamburger (mobile) + title */}
       <div className="flex items-center gap-3 min-w-0">

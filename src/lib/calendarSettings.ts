@@ -1,5 +1,6 @@
 export type YearType = 'calendar' | 'financial';
 export type YearDisplayFormat = 'full' | 'short' | 'range';
+export type ColorScheme = 'dark' | 'light';
 
 export interface TeamDef {
   id: string;
@@ -22,6 +23,7 @@ export interface AppSettings {
   yearDisplayFormat: YearDisplayFormat;
 
   // Branding
+  colorScheme: ColorScheme;
   companyName: string;
   accentColor: string;   // hex, default '#2acfc0'
   sidebarBg: string;     // hex, default '#0d1a2e'
@@ -64,6 +66,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   fyStartMonth: 4, // April — standard UK fiscal year
   yearDisplayFormat: 'short', // FY26
 
+  colorScheme: 'dark',
   companyName: 'Form3',
   accentColor: '#2acfc0',
   sidebarBg: '#0d1a2e',

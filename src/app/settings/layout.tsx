@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
-import { Palette, Calendar, Users, Target, Plug, Database, ListTodo } from 'lucide-react';
+import { Palette, Calendar, Users, Target, Plug, Database, ListTodo, SunMoon } from 'lucide-react';
 
 const NAV_ITEMS = [
+  { href: '/settings/appearance',   label: 'Appearance',      icon: SunMoon   },
   { href: '/settings/branding',     label: 'Branding',        icon: Palette   },
   { href: '/settings/calendar',     label: 'Calendar',        icon: Calendar  },
   { href: '/settings/teams',        label: 'Teams',           icon: Users     },
@@ -20,11 +21,11 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
 
   return (
     <div className="flex-1 flex flex-col min-h-0 fade-in">
-      <Header title="Settings" subtitle="Manage branding, calendar, teams & integrations" />
+      <Header title="Settings" subtitle="Manage appearance, branding, calendar, teams & integrations" />
 
       {/* Mobile: horizontal tab bar */}
       <nav className="md:hidden flex overflow-x-auto border-b border-white/[0.06] px-3 py-2 gap-1 shrink-0"
-        style={{ background: 'rgba(13,26,46,0.6)', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+        style={{ background: 'var(--nav-bg)', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
           return (
@@ -43,7 +44,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop: left sidebar nav */}
         <nav className="hidden md:block w-52 shrink-0 border-r border-white/[0.06] overflow-y-auto py-4 px-2"
-          style={{ background: 'rgba(13,26,46,0.6)' }}>
+          style={{ background: 'var(--nav-bg)' }}>
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">Settings</p>
           <ul className="space-y-0.5">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {

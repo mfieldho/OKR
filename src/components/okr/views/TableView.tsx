@@ -65,7 +65,7 @@ export function TableView({ objectives, onSelect }: { objectives: Objective[]; o
   const sorted = sortObjectives(objectives, sortKey, dir, teams);
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'rgba(22,38,64,0.5)' }}>
+    <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'var(--surface-bg)' }}>
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-white/[0.06]" style={{ background: 'rgba(255,255,255,0.02)' }}>

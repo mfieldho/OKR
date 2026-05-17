@@ -29,7 +29,7 @@ export function ListView({ objectives, onSelect }: { objectives: Objective[]; on
   const { data } = useOKR();
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] overflow-x-auto" style={{ background: 'rgba(22,38,64,0.5)', WebkitOverflowScrolling: 'touch' }}><div style={{ minWidth: 700 }}>
+    <div className="rounded-2xl border border-white/[0.06] overflow-x-auto" style={{ background: 'var(--surface-bg)', WebkitOverflowScrolling: 'touch' }}><div style={{ minWidth: 700 }}>
       {/* Header row */}
       <div className="grid items-center px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-semibold uppercase tracking-wider text-slate-600"
         style={{ gridTemplateColumns: '130px 1fr 110px 120px 110px 90px 32px' }}>

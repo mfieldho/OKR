@@ -113,7 +113,7 @@ export default function CompanyDashboard() {
         </section>
 
         {/* Team comparison chart */}
-        <TeamComparisonChart />
+        <TeamComparisonChart teams={data.teams} />
 
         {/* Company objectives */}
         <section>

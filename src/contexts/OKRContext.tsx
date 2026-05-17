@@ -1,8 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { CompanyOKR, Quarter } from '@/lib/types';
-import { companyOKR as mockData } from '@/lib/mockData';
+import { buildCompanyOKR } from '@/lib/mockData';
 
 interface OKRContextValue {
   data: CompanyOKR | null;
@@ -17,7 +17,6 @@ interface OKRContextValue {
 const OKRContext = createContext<OKRContextValue | null>(null);
 
 export function OKRProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<CompanyOKR | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuarter, setSelectedQuarter] = useState<Quarter>('Q2');
@@ -27,10 +26,7 @@ export function OKRProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      // When SharePoint env vars are set, switch to live data via sharepoint.ts
-      // For now, use mock data
-      await new Promise(r => setTimeout(r, 600)); // simulate network
-      setData(mockData);
+      await new Promise(r => setTimeout(r, 400));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load OKR data');
     } finally {
@@ -39,6 +35,12 @@ export function OKRProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Recompute derived data whenever the selected quarter changes
+  const data = useMemo<CompanyOKR | null>(() => {
+    if (loading) return null;
+    return buildCompanyOKR(selectedQuarter, 2026);
+  }, [selectedQuarter, loading]);
 
   return (
     <OKRContext.Provider value={{ data, loading, error, selectedQuarter, setSelectedQuarter, isUsingLiveData, refresh: loadData }}>

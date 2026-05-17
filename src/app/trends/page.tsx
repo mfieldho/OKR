@@ -15,7 +15,9 @@ export default function TrendsPage() {
   if (!data) return null;
 
   const allKRs = data.objectives.flatMap(o => o.keyResults);
-  const avgKRProgress = Math.round(allKRs.reduce((a, k) => a + k.progress, 0) / allKRs.length);
+  const avgKRProgress = allKRs.length
+    ? Math.round(allKRs.reduce((a, k) => a + k.progress, 0) / allKRs.length)
+    : 0;
 
   return (
     <div className="flex-1 fade-in">
@@ -27,7 +29,7 @@ export default function TrendsPage() {
           <StatusDonutChart objectives={data.objectives} />
         </div>
 
-        <TeamComparisonChart />
+        <TeamComparisonChart teams={data.teams} />
 
         {/* Key result breakdown */}
         <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>

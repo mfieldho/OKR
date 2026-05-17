@@ -21,6 +21,7 @@ const nav = [
   { href: '/teams', label: 'Teams', icon: Users },
   { href: '/individuals', label: 'Individuals', icon: User },
   { href: '/trends', label: 'Trends', icon: TrendingUp },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export function Sidebar() {
@@ -86,11 +87,6 @@ export function Sidebar() {
             <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
           </button>
         </div>
-        <Link href="/settings"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-500 hover:text-slate-300 hover:bg-white/[0.04] transition-all">
-          <Settings size={15} />
-          Settings
-        </Link>
       </div>
     </aside>
   );

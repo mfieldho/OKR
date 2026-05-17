@@ -510,14 +510,70 @@ export default function ObjectivesSettingsPage() {
         })}
       </div>
 
-      {/* Reset to demo data */}
-      {!isUsingDemo && (
-        <div className="pt-4 border-t border-white/[0.06]">
-          <button onClick={() => updateSettings({ customObjectives: null })}
-            className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
-            Reset to demo data
-          </button>
+      {/* Danger zone */}
+      <div className="pt-6 border-t border-white/[0.06] space-y-3">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Danger zone</p>
+        <div className="rounded-2xl border border-red-500/[0.15] p-4 space-y-3"
+          style={{ background: 'rgba(239,68,68,0.04)' }}>
+          <DangerAction
+            label="Clear all objectives for this quarter"
+            description={`Permanently deletes all ${activeQ} objectives and their key results.`}
+            onConfirm={() => {
+              const base = settings.customObjectives
+                ? { ...settings.customObjectives }
+                : { Q1: [...(allObjectives.Q1 ?? [])], Q2: [...(allObjectives.Q2 ?? [])], Q3: [...(allObjectives.Q3 ?? [])], Q4: [...(allObjectives.Q4 ?? [])] };
+              base[activeQ] = [];
+              updateSettings({ customObjectives: base });
+            }}
+          />
+          <DangerAction
+            label="Clear ALL objectives (all quarters)"
+            description="Permanently deletes every objective and key result across all quarters."
+            onConfirm={() => updateSettings({ customObjectives: { Q1: [], Q2: [], Q3: [], Q4: [] } })}
+          />
+          {!isUsingDemo && (
+            <DangerAction
+              label="Reset to demo data"
+              description="Discards all custom objectives and restores the built-in demo dataset."
+              onConfirm={() => updateSettings({ customObjectives: null })}
+              variant="neutral"
+            />
+          )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function DangerAction({ label, description, onConfirm, variant = 'danger' }: {
+  label: string; description: string; onConfirm: () => void; variant?: 'danger' | 'neutral';
+}) {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-medium" style={{ color: variant === 'danger' ? '#fca5a5' : '#94a3b8' }}>{label}</p>
+        <p className="text-[10px] text-slate-600 mt-0.5">{description}</p>
+      </div>
+      {confirming ? (
+        <div className="flex items-center gap-2 shrink-0">
+          <button onClick={() => { onConfirm(); setConfirming(false); }}
+            className="px-2.5 py-1 rounded-lg text-xs font-medium"
+            style={variant === 'danger'
+              ? { background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }
+              : { background: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+            Confirm
+          </button>
+          <button onClick={() => setConfirming(false)} className="text-xs text-slate-500 hover:text-slate-300 px-1">Cancel</button>
+        </div>
+      ) : (
+        <button onClick={() => setConfirming(true)}
+          className="shrink-0 px-2.5 py-1 rounded-lg text-xs transition-all"
+          style={variant === 'danger'
+            ? { color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }
+            : { color: '#64748b', border: '1px solid rgba(255,255,255,0.08)' }}>
+          {label.startsWith('Reset') ? 'Reset' : 'Clear'}
+        </button>
       )}
     </div>
   );

@@ -3,17 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
-  Users,
-  User,
-  TrendingUp,
-  Settings,
-  RefreshCw,
-  Wifi,
-  WifiOff,
+  LayoutDashboard, Users, User, TrendingUp, Settings,
+  RefreshCw, Wifi, WifiOff,
+  Columns3, LayoutGrid, AlignLeft, Table2, Users2,
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useOKRView, OKRView } from '@/contexts/OKRViewContext';
 import { cn } from '@/lib/utils';
 import { Form3Logo } from '@/components/ui/Form3Logo';
 
@@ -29,6 +25,16 @@ export function Sidebar() {
   const pathname = usePathname();
   const { data, loading, isUsingLiveData, refresh } = useOKR();
   const { dataSource } = useSettings();
+  const { view, setView } = useOKRView();
+  const isDashboard = pathname === '/';
+
+  const VIEW_OPTIONS: { id: OKRView; Icon: React.ComponentType<{ size: number }>; label: string }[] = [
+    { id: 'kanban', Icon: Columns3,   label: 'Kanban'  },
+    { id: 'grid',   Icon: LayoutGrid, label: 'Grid'    },
+    { id: 'list',   Icon: AlignLeft,  label: 'List'    },
+    { id: 'table',  Icon: Table2,     label: 'Table'   },
+    { id: 'team',   Icon: Users2,     label: 'By Team' },
+  ];
 
   return (
     <aside className="w-60 shrink-0 flex flex-col h-screen sticky top-0 border-r border-white/[0.06]"
@@ -72,6 +78,25 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* View switcher — dashboard only */}
+      {isDashboard && (
+        <div className="px-3 pb-3">
+          <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-1 mb-1.5">View</p>
+          <div className="space-y-0.5">
+            {VIEW_OPTIONS.map(({ id, Icon, label }) => (
+              <button key={id} onClick={() => setView(id)}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150"
+                style={view === id
+                  ? { background: 'rgba(42,207,192,0.1)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.2)' }
+                  : { color: '#475569' }}>
+                <Icon size={13} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <div className="px-4 py-4 border-t border-white/[0.06] space-y-2">

@@ -13,6 +13,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import { cn } from '@/lib/utils';
 import { Form3Logo } from '@/components/ui/Form3Logo';
 
@@ -27,6 +28,7 @@ const nav = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data, loading, isUsingLiveData, refresh } = useOKR();
+  const { dataSource } = useSettings();
 
   return (
     <aside className="w-60 shrink-0 flex flex-col h-screen sticky top-0 border-r border-white/[0.06]"
@@ -74,13 +76,17 @@ export function Sidebar() {
       {/* Footer */}
       <div className="px-4 py-4 border-t border-white/[0.06] space-y-2">
         <div className="flex items-center gap-2 px-1">
-          {isUsingLiveData ? (
+          {dataSource === 'supabase' ? (
             <Wifi size={12} className="text-emerald-400" />
           ) : (
             <WifiOff size={12} className="text-slate-500" />
           )}
           <span className="text-xs text-slate-500">
-            {isUsingLiveData ? 'Live — SharePoint' : 'Demo data'}
+            {dataSource === 'supabase'
+              ? 'Supabase'
+              : isUsingLiveData
+                ? 'Live — SharePoint'
+                : 'Demo data'}
           </span>
           <button onClick={refresh} disabled={loading}
             className="ml-auto text-slate-500 hover:text-slate-300 transition-colors disabled:opacity-40">

@@ -5,7 +5,8 @@ import { OKRProvider } from '@/contexts/OKRContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { OKRViewProvider } from '@/contexts/OKRViewContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthGuard } from '@/components/layout/AuthGuard';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' });
 
@@ -18,18 +19,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geist.variable} h-full`}>
       <body className="h-full flex antialiased">
-        <SettingsProvider>
-          <OKRProvider>
-            <OKRViewProvider>
-              <SidebarProvider>
-                <Sidebar />
-                <div className="flex-1 flex flex-col min-h-screen overflow-auto">
-                  {children}
-                </div>
-              </SidebarProvider>
-            </OKRViewProvider>
-          </OKRProvider>
-        </SettingsProvider>
+        <AuthProvider>
+          <SettingsProvider>
+            <OKRProvider>
+              <OKRViewProvider>
+                <SidebarProvider>
+                  <AuthGuard>
+                    {children}
+                  </AuthGuard>
+                </SidebarProvider>
+              </OKRViewProvider>
+            </OKRProvider>
+          </SettingsProvider>
+        </AuthProvider>
       </body>
     </html>
   );

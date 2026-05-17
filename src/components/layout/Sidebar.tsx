@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, User, TrendingUp, Settings,
-  RefreshCw, Wifi, WifiOff, X, Layers,
+  RefreshCw, Wifi, WifiOff, X, Layers, LogOut,
 } from 'lucide-react';
 import { useOKR } from '@/contexts/OKRContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useSidebar } from '@/contexts/SidebarContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { Form3Logo } from '@/components/ui/Form3Logo';
 
@@ -27,6 +28,7 @@ export function Sidebar() {
   const { data, loading, isUsingLiveData, refresh } = useOKR();
   const { dataSource } = useSettings();
   const { open, close } = useSidebar();
+  const { logout } = useAuth();
 
   return (
     <>
@@ -104,7 +106,7 @@ export function Sidebar() {
 
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-white/[0.06] shrink-0">
+        <div className="px-4 py-4 border-t border-white/[0.06] shrink-0 space-y-2">
           <div className="flex items-center gap-2 px-1">
             {dataSource === 'supabase' ? (
               <Wifi size={12} className="text-emerald-400" />
@@ -126,6 +128,13 @@ export function Sidebar() {
               <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
             </button>
           </div>
+          <button
+            onClick={logout}
+            className="flex items-center gap-2 w-full px-1 py-1.5 rounded-lg text-xs text-slate-500 hover:text-slate-300 hover:bg-white/[0.04] transition-colors"
+          >
+            <LogOut size={12} />
+            Sign out
+          </button>
         </div>
       </aside>
     </>

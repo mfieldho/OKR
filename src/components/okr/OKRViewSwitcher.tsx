@@ -5,7 +5,7 @@ import { Plus, Upload, Download, Search, X, SlidersHorizontal } from 'lucide-rea
 import { Objective, OKRStatus } from '@/lib/types';
 import { useOKRView } from '@/contexts/OKRViewContext';
 import { useOKR } from '@/contexts/OKRContext';
-import { KanbanView }     from './views/KanbanView';
+import { KanbanView, GroupBy, GROUP_OPTIONS } from './views/KanbanView';
 import { GridView }       from './views/GridView';
 import { ListView }       from './views/ListView';
 import { TableView }      from './views/TableView';
@@ -69,7 +69,58 @@ const STATUS_OPTIONS: { value: OKRStatus | 'all'; label: string }[] = [
 ];
 
 const SEL = "px-3 py-2 rounded-xl text-sm text-white border border-white/[0.08] focus:border-white/20 focus:outline-none transition-colors";
-const SEL_BG: React.CSSProperties = { background: 'rgba(20,35,60,0.95)' };
+const SEL_BG: React.CSSProperties = { background: 'var(--select-bg)' };
+
+// ─── Group-by helpers ─────────────────────────────────────────────────────────
+
+const PALETTE = ['#6366f1','#06b6d4','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6','#ec4899'];
+
+function getGroupSections(
+  groupBy: GroupBy,
+  objectives: Objective[],
+  teams: { id: string; name: string; color: string }[],
+): { id: string; label: string; color: string; objectives: Objective[] }[] {
+  if (groupBy === 'okr') return [];
+
+  const map = new Map<string, { label: string; color: string; objectives: Objective[] }>();
+
+  for (const obj of objectives) {
+    let key = '';
+    let label = '';
+    let color = '#64748b';
+
+    if (groupBy === 'team') {
+      const t = teams.find(t => t.id === obj.teamId);
+      key = obj.teamId ?? 'unknown';
+      label = t?.name ?? 'Unknown Team';
+      color = t?.color ?? '#64748b';
+    } else if (groupBy === 'status') {
+      key = obj.status;
+      const STATUS_MAP: Record<string, { label: string; color: string }> = {
+        'not-started': { label: 'Not Started', color: '#64748b' },
+        'on-track':    { label: 'On Track',    color: '#10b981' },
+        'at-risk':     { label: 'At Risk',      color: '#f59e0b' },
+        'behind':      { label: 'Behind',       color: '#ef4444' },
+        'completed':   { label: 'Completed',    color: '#2acfc0' },
+      };
+      label = STATUS_MAP[obj.status]?.label ?? obj.status;
+      color = STATUS_MAP[obj.status]?.color ?? '#64748b';
+    } else if (groupBy === 'owner') {
+      key = obj.owner || 'Unassigned';
+      label = key;
+      color = PALETTE[Math.abs(key.split('').reduce((a, c) => a + c.charCodeAt(0), 0)) % PALETTE.length];
+    } else if (groupBy === 'quarter') {
+      key = obj.quarter;
+      label = obj.quarter;
+      color = PALETTE['Q1Q2Q3Q4'.indexOf(key[1]) % PALETTE.length] ?? '#64748b';
+    }
+
+    if (!map.has(key)) map.set(key, { label, color, objectives: [] });
+    map.get(key)!.objectives.push(obj);
+  }
+
+  return Array.from(map.entries()).map(([id, v]) => ({ id, ...v }));
+}
 
 interface FilterState {
   search: string;
@@ -118,9 +169,11 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
   const [importing,  setImporting]  = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [filter,     setFilter]     = useState<FilterState>(DEFAULT_FILTER);
+  const [groupBy,    setGroupBy]    = useState<GroupBy>('okr');
 
   const filtered = useMemo(() => applyFilters(objectives, filter), [objectives, filter]);
   const dirty = !isDefaultFilter(filter);
+  const groupSections = useMemo(() => getGroupSections(groupBy, filtered, teams), [groupBy, filtered, teams]);
 
   const setF = <K extends keyof FilterState>(key: K, val: FilterState[K]) =>
     setFilter(prev => ({ ...prev, [key]: val }));
@@ -210,13 +263,61 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
         </div>
       )}
 
+      {/* ── Group-by selector ── */}
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        <span className="text-xs text-slate-500 font-medium shrink-0">Group by:</span>
+        {GROUP_OPTIONS.map(opt => (
+          <button key={opt.id} onClick={() => setGroupBy(opt.id)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
+            style={groupBy === opt.id
+              ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.3)' }
+              : { background: 'var(--input-bg)', color: '#64748b', border: '1px solid var(--border-subtle)' }}>
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
       {/* ── Active view ── */}
-      {view === 'kanban' && <KanbanView    objectives={filtered} onSelect={setSelected} />}
-      {view === 'grid'   && <GridView      objectives={filtered} onSelect={setSelected} />}
-      {view === 'list'   && <ListView      objectives={filtered} onSelect={setSelected} />}
-      {view === 'table'  && <TableView     objectives={filtered} onSelect={setSelected} />}
-      {view === 'team'   && <TeamBoardView objectives={filtered} onSelect={setSelected} />}
-      {view === 'tree'   && <TreeView      objectives={filtered} onSelect={setSelected} />}
+      {view === 'kanban' && (
+        <KanbanView objectives={filtered} onSelect={setSelected} groupBy={groupBy} />
+      )}
+
+      {/* Non-kanban views: flat when groupBy=okr, sectioned otherwise */}
+      {view !== 'kanban' && groupBy === 'okr' && (
+        <>
+          {view === 'grid'   && <GridView      objectives={filtered} onSelect={setSelected} />}
+          {view === 'list'   && <ListView      objectives={filtered} onSelect={setSelected} />}
+          {view === 'table'  && <TableView     objectives={filtered} onSelect={setSelected} />}
+          {view === 'team'   && <TeamBoardView objectives={filtered} onSelect={setSelected} />}
+          {view === 'tree'   && <TreeView      objectives={filtered} onSelect={setSelected} />}
+        </>
+      )}
+
+      {view !== 'kanban' && groupBy !== 'okr' && (
+        <div className="space-y-8">
+          {groupSections.map(section => (
+            <div key={section.id}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: section.color, boxShadow: `0 0 6px ${section.color}88` }} />
+                <span className="text-sm font-semibold text-slate-200">{section.label}</span>
+                <span className="text-xs text-slate-600 px-1.5 py-0.5 rounded"
+                  style={{ background: 'var(--input-bg)' }}>
+                  {section.objectives.length}
+                </span>
+                <div className="flex-1 h-px" style={{ background: 'var(--border-subtle)' }} />
+              </div>
+              {view === 'grid'   && <GridView      objectives={section.objectives} onSelect={setSelected} />}
+              {view === 'list'   && <ListView      objectives={section.objectives} onSelect={setSelected} />}
+              {view === 'table'  && <TableView     objectives={section.objectives} onSelect={setSelected} />}
+              {view === 'team'   && <TeamBoardView objectives={section.objectives} onSelect={setSelected} />}
+              {view === 'tree'   && <TreeView      objectives={section.objectives} onSelect={setSelected} />}
+            </div>
+          ))}
+          {groupSections.length === 0 && (
+            <div className="py-12 text-center text-slate-600 text-sm">No objectives found.</div>
+          )}
+        </div>
+      )}
 
       {/* ── Panels ── */}
       {selected  && <OKRDetailPanel   objective={selected}   onClose={() => setSelected(null)} />}

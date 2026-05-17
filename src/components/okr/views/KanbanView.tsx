@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Objective, KeyResult, OKRStatus } from '@/lib/types';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { StatusBadge } from '@/components/ui/Badge';
@@ -8,16 +8,16 @@ import { progressColor } from '@/lib/utils';
 import { useOKR } from '@/contexts/OKRContext';
 import { MessageSquare, Activity } from 'lucide-react';
 
-// ─── Group-by types ───────────────────────────────────────────────────────────
+// ─── Group-by types (exported for shared use) ─────────────────────────────────
 
-type GroupBy = 'status' | 'team' | 'owner' | 'quarter' | 'okr';
+export type GroupBy = 'okr' | 'status' | 'team' | 'owner' | 'quarter';
 
-const GROUP_OPTIONS: { id: GroupBy; label: string }[] = [
-  { id: 'status',  label: 'Status'  },
+export const GROUP_OPTIONS: { id: GroupBy; label: string }[] = [
+  { id: 'okr',     label: 'By OKR'  },
   { id: 'team',    label: 'Team'    },
+  { id: 'status',  label: 'Status'  },
   { id: 'owner',   label: 'Owner'   },
   { id: 'quarter', label: 'Quarter' },
-  { id: 'okr',     label: 'By OKR'  },
 ];
 
 // ─── Status column definitions ────────────────────────────────────────────────
@@ -240,36 +240,25 @@ function KRCard({ kr, accentColor, onSelect }: {
 
 // ─── Main view ────────────────────────────────────────────────────────────────
 
-export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; onSelect: (o: Objective) => void }) {
+export function KanbanView({
+  objectives, onSelect, groupBy,
+}: {
+  objectives: Objective[];
+  onSelect: (o: Objective) => void;
+  groupBy: GroupBy;
+}) {
   const { data } = useOKR();
   const teams = data?.teams ?? [];
-  const [groupBy, setGroupBy] = useState<GroupBy>('status');
 
-  const columns = groupBy !== 'okr' ? buildColumns(groupBy, objectives, teams) : [];
-
-  const groupBySelector = (
-    <div className="flex items-center gap-2 mb-4 flex-wrap">
-      <span className="text-xs text-slate-500 font-medium">Group by:</span>
-      {GROUP_OPTIONS.map(opt => (
-        <button
-          key={opt.id}
-          onClick={() => setGroupBy(opt.id)}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
-          style={groupBy === opt.id
-            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.3)' }
-            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
+  const columns = useMemo(
+    () => groupBy !== 'okr' ? buildColumns(groupBy, objectives, teams) : [],
+    [groupBy, objectives, teams],
   );
 
   // ── By OKR: columns = objectives, cards = key results ──
   if (groupBy === 'okr') {
     return (
       <div>
-        {groupBySelector}
         <div
           className="flex gap-4 pb-4 -mx-1 px-1"
           style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
@@ -329,7 +318,6 @@ export function KanbanView({ objectives, onSelect }: { objectives: Objective[]; 
   // ── Standard board ──
   return (
     <div>
-      {groupBySelector}
       <div
         className="flex gap-4 pb-4 -mx-1 px-1"
         style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}

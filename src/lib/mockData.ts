@@ -1,4 +1,5 @@
 import { Objective, Team, Individual } from './types';
+import { TeamDef } from './calendarSettings';
 
 // ─── Q1 2026 (completed) ───────────────────────────────────────────────────
 
@@ -260,25 +261,30 @@ export const allObjectives: Record<string, Objective[]> = {
   Q4: q4Objectives,
 };
 
-// ─── Team definitions (static, progress computed per-quarter in context) ──
+// ─── Default team definitions (fallback if settings not available) ──
 
-export const teamDefs = [
-  { id: 'platform',   name: 'Platform & Infrastructure', lead: 'Sarah Mitchell', memberCount: 18, color: '#6366f1' },
-  { id: 'product',    name: 'Product',                   lead: 'Marcus Webb',    memberCount: 12, color: '#06b6d4' },
-  { id: 'commercial', name: 'Commercial',                lead: 'Priya Sharma',   memberCount: 22, color: '#10b981' },
-  { id: 'engineering',name: 'Engineering',               lead: 'Alex Torres',    memberCount: 35, color: '#f59e0b' },
-  { id: 'risk',       name: 'Risk & Compliance',         lead: 'Nina Okonkwo',   memberCount: 9,  color: '#ef4444' },
+export const teamDefs: TeamDef[] = [
+  { id: 'platform',    name: 'Platform & Infrastructure', lead: 'Sarah Mitchell', memberCount: 18, color: '#6366f1', description: '' },
+  { id: 'product',     name: 'Product',                   lead: 'Marcus Webb',    memberCount: 12, color: '#06b6d4', description: '' },
+  { id: 'commercial',  name: 'Commercial',                lead: 'Priya Sharma',   memberCount: 22, color: '#10b981', description: '' },
+  { id: 'engineering', name: 'Engineering',               lead: 'Alex Torres',    memberCount: 35, color: '#f59e0b', description: '' },
+  { id: 'risk',        name: 'Risk & Compliance',         lead: 'Nina Okonkwo',   memberCount: 9,  color: '#ef4444', description: '' },
 ];
 
-export const buildCompanyOKR = (quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4', year: number) => {
+export const buildCompanyOKR = (
+  quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4',
+  year: number,
+  teamsOverride?: TeamDef[],
+) => {
   const objectives = allObjectives[quarter] ?? [];
+  const defs = teamsOverride ?? teamDefs;
 
-  const teams: Team[] = teamDefs.map(def => {
+  const teams: Team[] = defs.map(def => {
     const teamObjs = objectives.filter(o => o.teamId === def.id);
     const progress = teamObjs.length
       ? Math.round(teamObjs.reduce((a, o) => a + o.progress, 0) / teamObjs.length)
       : 0;
-    return { ...def, description: '', objectives: teamObjs, progress };
+    return { ...def, objectives: teamObjs, progress };
   }).filter(t => t.objectives.length > 0);
 
   const individuals: Individual[] = teams.map(t => ({

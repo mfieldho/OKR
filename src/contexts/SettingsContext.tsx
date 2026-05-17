@@ -25,6 +25,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Apply CSS variables whenever accentColor or sidebarBg changes
+  useEffect(() => {
+    document.documentElement.style.setProperty('--accent', settings.accentColor);
+    document.documentElement.style.setProperty('--sidebar-bg', settings.sidebarBg);
+  }, [settings.accentColor, settings.sidebarBg]);
+
   const updateSettings = useCallback((patch: Partial<AppSettings>) => {
     setSettings(prev => {
       const next = { ...prev, ...patch };

@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { CompanyOKR, Quarter } from '@/lib/types';
 import { buildCompanyOKR } from '@/lib/mockData';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface OKRContextValue {
   data: CompanyOKR | null;
@@ -17,6 +18,7 @@ interface OKRContextValue {
 const OKRContext = createContext<OKRContextValue | null>(null);
 
 export function OKRProvider({ children }: { children: React.ReactNode }) {
+  const { settings } = useSettings();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuarter, setSelectedQuarter] = useState<Quarter>('Q2');
@@ -36,11 +38,11 @@ export function OKRProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Recompute derived data whenever the selected quarter changes
+  // Recompute derived data whenever the selected quarter or teams settings change
   const data = useMemo<CompanyOKR | null>(() => {
     if (loading) return null;
-    return buildCompanyOKR(selectedQuarter, 2026);
-  }, [selectedQuarter, loading]);
+    return buildCompanyOKR(selectedQuarter, 2026, settings.teams);
+  }, [selectedQuarter, loading, settings.teams]);
 
   return (
     <OKRContext.Provider value={{ data, loading, error, selectedQuarter, setSelectedQuarter, isUsingLiveData, refresh: loadData }}>

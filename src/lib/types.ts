@@ -42,14 +42,17 @@ export interface Objective {
   description?: string;
   owner: string;
   teamId: string;
-  quarter: Quarter;
+  quarter: Quarter;           // primary / start quarter
+  quarters?: Quarter[];       // full span for multi-quarter / yearly OKRs
   year: number;
-  cadence?: OKRCadence;   // 'quarterly' (default) or 'yearly'
+  cadence?: OKRCadence;       // 'quarterly' (default) or 'yearly'
+  startDate?: string;         // ISO date  e.g. '2026-01-01'
+  endDate?: string;           // ISO date  e.g. '2026-12-31'
   status: OKRStatus;
   progress: number; // 0-100, computed from key results
   keyResults: KeyResult[];
   tags?: string[];
-  parentId?: string;      // alignment — links to a parent objective id
+  parentId?: string;          // alignment — links to a parent objective id
   comments?: Comment[];
 }
 

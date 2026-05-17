@@ -43,16 +43,30 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
   const defaultTeam = settings.teams[0]?.id ?? '';
   const allObjectives = data?.objectives ?? [];
 
-  const [title, setTitle]           = useState('');
-  const [description, setDescription] = useState('');
-  const [owner, setOwner]           = useState('');
-  const [teamId, setTeamId]         = useState(defaultTeam);
-  const [quarter, setQuarter]       = useState<Quarter>('Q2');
-  const [cadence, setCadence]       = useState<OKRCadence>('quarterly');
-  const [status, setStatus]         = useState<OKRStatus>('not-started');
-  const [tags, setTags]             = useState('');
-  const [parentId, setParentId]     = useState('');
-  const [krs, setKrs]               = useState<KeyResult[]>([]);
+  const [title, setTitle]               = useState('');
+  const [description, setDescription]   = useState('');
+  const [owner, setOwner]               = useState('');
+  const [teamId, setTeamId]             = useState(defaultTeam);
+  const [cadence, setCadence]           = useState<OKRCadence>('quarterly');
+  const [selectedQuarters, setSelectedQuarters] = useState<Quarter[]>(['Q2']);
+  const [startDate, setStartDate]       = useState('');
+  const [endDate, setEndDate]           = useState('');
+  const [status, setStatus]             = useState<OKRStatus>('not-started');
+  const [tags, setTags]                 = useState('');
+  const [parentId, setParentId]         = useState('');
+  const [krs, setKrs]                   = useState<KeyResult[]>([]);
+
+  const toggleQuarter = (q: Quarter) => {
+    if (cadence === 'quarterly') {
+      setSelectedQuarters([q]);
+    } else {
+      setSelectedQuarters(prev =>
+        prev.includes(q)
+          ? prev.length > 1 ? prev.filter(x => x !== q) : prev
+          : [...prev, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b))
+      );
+    }
+  };
 
   const updateKR = (idx: number, kr: KeyResult) =>
     setKrs(prev => prev.map((k, i) => i === idx ? kr : k));
@@ -68,9 +82,12 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
       description: description.trim() || undefined,
       owner: owner.trim(),
       teamId,
-      quarter,
+      quarter: selectedQuarters[0] ?? 'Q1',
+      quarters: selectedQuarters,
       year: 2026,
       cadence,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
       status,
       progress: computeProgress(krs),
       keyResults: krs,
@@ -130,29 +147,68 @@ export function AddObjectivePanel({ onClose }: AddObjectivePanelProps) {
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] text-slate-500 mb-1">Quarter</label>
-                <select value={quarter} onChange={e => setQuarter(e.target.value as Quarter)} className={INPUT} style={SELECT_BG}>
-                  {QUARTERS.map(q => <option key={q} value={q}>{q}</option>)}
-                </select>
-              </div>
-              <div>
                 <label className="block text-[10px] text-slate-500 mb-1">Status</label>
                 <select value={status} onChange={e => setStatus(e.target.value as OKRStatus)} className={INPUT} style={SELECT_BG}>
                   {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                 </select>
               </div>
-              <div className="col-span-2">
-                <label className="block text-[10px] text-slate-500 mb-2">Cadence</label>
-                <div className="flex gap-2">
-                  {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
-                    <button key={c} type="button" onClick={() => setCadence(c)}
-                      className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
-                      style={cadence === c
-                        ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
-                        : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
-                      {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
-                    </button>
-                  ))}
+              <div className="col-span-2 space-y-3 rounded-xl border border-white/[0.07] p-3"
+                style={{ background: 'rgba(255,255,255,0.02)' }}>
+                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Timing</p>
+
+                {/* Cadence toggle */}
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1.5">Cadence</label>
+                  <div className="flex gap-2">
+                    {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
+                      <button key={c} type="button"
+                        onClick={() => {
+                          setCadence(c);
+                          setSelectedQuarters(c === 'yearly' ? ['Q1', 'Q2', 'Q3', 'Q4'] : [selectedQuarters[0] ?? 'Q1']);
+                        }}
+                        className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                        style={cadence === c
+                          ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                          : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                        {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quarter selector */}
+                <div>
+                  <label className="block text-[10px] text-slate-500 mb-1.5">
+                    {cadence === 'yearly' ? 'Quarters covered' : 'Quarter'}
+                  </label>
+                  <div className="flex gap-1.5">
+                    {QUARTERS.map(q => {
+                      const active = selectedQuarters.includes(q);
+                      return (
+                        <button key={q} type="button" onClick={() => toggleQuarter(q)}
+                          className="flex-1 py-2 rounded-lg text-xs font-bold transition-all"
+                          style={active
+                            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                          {q}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Start / End dates */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] text-slate-500 mb-1">Start date</label>
+                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
+                      className={INPUT} style={INPUT_BG} />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-500 mb-1">End date</label>
+                    <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
+                      className={INPUT} style={INPUT_BG} />
+                  </div>
                 </div>
               </div>
               <div className="col-span-2">

@@ -364,7 +364,7 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
     onClose();
   };
 
-  const handleDelete = () => { deleteObjective(objective.id, objective.quarter); onClose(); };
+  const handleDelete = () => { deleteObjective(objective.id); onClose(); };
 
   const updateKR = (idx: number, kr: KeyResult) =>
     setDraft(d => ({ ...d, keyResults: d.keyResults.map((k, i) => i === idx ? kr : k) }));
@@ -424,29 +424,80 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                       className={INPUT} style={SELECT_BG}>
                       {allTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                     </select></div>
-                  <div><label className="block text-[10px] text-slate-500 mb-1">Quarter</label>
-                    <select value={draft.quarter} onChange={e => setDraft(d => ({ ...d, quarter: e.target.value as Quarter }))}
-                      className={INPUT} style={SELECT_BG}>
-                      {QUARTERS.map(q => <option key={q} value={q}>{q}</option>)}
-                    </select></div>
                   <div><label className="block text-[10px] text-slate-500 mb-1">Status</label>
                     <select value={draft.status} onChange={e => setDraft(d => ({ ...d, status: e.target.value as OKRStatus }))}
                       className={INPUT} style={SELECT_BG}>
                       {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                     </select></div>
-                  <div className="col-span-2">
-                    <label className="block text-[10px] text-slate-500 mb-2">Cadence</label>
-                    <div className="flex gap-2">
-                      {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
-                        <button key={c} type="button"
-                          onClick={() => setDraft(d => ({ ...d, cadence: c }))}
-                          className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
-                          style={(draft.cadence ?? 'quarterly') === c
-                            ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
-                            : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
-                          {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
-                        </button>
-                      ))}
+                  <div className="col-span-2 space-y-3 rounded-xl border border-white/[0.07] p-3"
+                    style={{ background: 'rgba(255,255,255,0.02)' }}>
+                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Timing</p>
+                    {/* Cadence */}
+                    <div>
+                      <label className="block text-[10px] text-slate-500 mb-1.5">Cadence</label>
+                      <div className="flex gap-2">
+                        {(['quarterly', 'yearly'] as OKRCadence[]).map(c => (
+                          <button key={c} type="button"
+                            onClick={() => {
+                              const newCadence = c;
+                              const newQuarters = newCadence === 'yearly'
+                                ? (['Q1','Q2','Q3','Q4'] as Quarter[])
+                                : [draft.quarter ?? 'Q1'];
+                              setDraft(d => ({ ...d, cadence: newCadence, quarters: newQuarters }));
+                            }}
+                            className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                            style={(draft.cadence ?? 'quarterly') === c
+                              ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                              : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                            {c === 'quarterly' ? 'Quarterly' : 'Yearly'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Quarter multi-select */}
+                    <div>
+                      <label className="block text-[10px] text-slate-500 mb-1.5">
+                        {(draft.cadence ?? 'quarterly') === 'yearly' ? 'Quarters covered' : 'Quarter'}
+                      </label>
+                      <div className="flex gap-1.5">
+                        {QUARTERS.map(q => {
+                          const draftQuarters = draft.quarters ?? [draft.quarter];
+                          const active = draftQuarters.includes(q);
+                          return (
+                            <button key={q} type="button"
+                              onClick={() => {
+                                const cur = draft.quarters ?? [draft.quarter];
+                                const isYearly = (draft.cadence ?? 'quarterly') === 'yearly';
+                                let next: Quarter[];
+                                if (isYearly) {
+                                  next = cur.includes(q)
+                                    ? cur.length > 1 ? cur.filter(x => x !== q) : cur
+                                    : [...cur, q].sort((a, b) => QUARTERS.indexOf(a) - QUARTERS.indexOf(b));
+                                } else {
+                                  next = [q];
+                                }
+                                setDraft(d => ({ ...d, quarter: next[0], quarters: next }));
+                              }}
+                              className="flex-1 py-2 rounded-lg text-xs font-bold transition-all"
+                              style={active
+                                ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.35)' }
+                                : { background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.07)' }}>
+                              {q}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    {/* Start / End dates */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div><label className="block text-[10px] text-slate-500 mb-1">Start date</label>
+                        <input type="date" value={draft.startDate ?? ''}
+                          onChange={e => setDraft(d => ({ ...d, startDate: e.target.value || undefined }))}
+                          className={INPUT} style={INPUT_BG} /></div>
+                      <div><label className="block text-[10px] text-slate-500 mb-1">End date</label>
+                        <input type="date" value={draft.endDate ?? ''}
+                          onChange={e => setDraft(d => ({ ...d, endDate: e.target.value || undefined }))}
+                          className={INPUT} style={INPUT_BG} /></div>
                     </div>
                   </div>
                 </div>
@@ -475,7 +526,6 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                       {team.name}
                     </span>
                   )}
-                  <span className="text-xs text-slate-600">{objective.quarter} {objective.year}</span>
                   {objective.cadence === 'yearly' ? (
                     <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
                       style={{ background: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.3)' }}>
@@ -485,6 +535,19 @@ export function OKRDetailPanel({ objective, onClose }: OKRDetailPanelProps) {
                     <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
                       style={{ background: 'rgba(59,130,246,0.12)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.25)' }}>
                       Quarterly
+                    </span>
+                  )}
+                  {/* Quarter span */}
+                  {(() => {
+                    const qs = objective.quarters ?? [objective.quarter];
+                    return qs.length > 1
+                      ? <span className="text-xs text-slate-500">{qs[0]}–{qs[qs.length - 1]} {objective.year}</span>
+                      : <span className="text-xs text-slate-500">{qs[0]} {objective.year}</span>;
+                  })()}
+                  {/* Dates */}
+                  {(objective.startDate || objective.endDate) && (
+                    <span className="text-xs text-slate-600">
+                      {objective.startDate ?? '…'} → {objective.endDate ?? '…'}
                     </span>
                   )}
                 </div>

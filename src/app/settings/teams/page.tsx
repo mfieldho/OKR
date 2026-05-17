@@ -212,14 +212,12 @@ export default function TeamsSettingsPage() {
   };
 
   const deleteObjective = (obj: Objective) => {
-    const q = obj.quarter;
-    const existing: Objective[] = settings.customObjectives
-      ? (settings.customObjectives[q] ?? [])
-      : (allObjectives[q] ?? []);
+    const allQ = ['Q1', 'Q2', 'Q3', 'Q4'] as const;
     const base = settings.customObjectives
       ? { ...settings.customObjectives }
       : { Q1: [...(allObjectives.Q1 ?? [])], Q2: [...(allObjectives.Q2 ?? [])], Q3: [...(allObjectives.Q3 ?? [])], Q4: [...(allObjectives.Q4 ?? [])] };
-    updateSettings({ customObjectives: { ...base, [q]: existing.filter(o => o.id !== obj.id) } });
+    for (const q of allQ) base[q] = (base[q] ?? []).filter(o => o.id !== obj.id);
+    updateSettings({ customObjectives: base });
     setDeletingObjId(null);
   };
 

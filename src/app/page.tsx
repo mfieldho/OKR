@@ -15,16 +15,17 @@ import type { Objective, Team } from '@/lib/types';
 // ─── Vibrant stat card ────────────────────────────────────────────────────────
 
 function VibrantStat({
-  label, value, sub, color, gradient, icon: Icon, trend,
+  label, value, sub, color, gradient, icon: Icon, trend, href,
 }: {
   label: string; value: number | string; sub: string;
   color: string; gradient: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   trend?: { value: number; label: string };
+  href?: string;
 }) {
-  return (
-    <div className="relative rounded-2xl overflow-hidden p-5 flex flex-col gap-2"
-      style={{ background: gradient, boxShadow: `0 4px 24px ${color}28, inset 0 1px 0 rgba(255,255,255,0.08)`, border: `1px solid ${color}35` }}>
+  const inner = (
+    <div className="relative rounded-2xl overflow-hidden p-5 flex flex-col gap-2 transition-all duration-200 hover:-translate-y-0.5"
+      style={{ background: gradient, boxShadow: `0 4px 24px ${color}28, inset 0 1px 0 rgba(255,255,255,0.08)`, border: `1px solid ${color}35`, cursor: href ? 'pointer' : 'default' }}>
       <div className="absolute top-0 right-0 w-24 h-24 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${color}22, transparent 70%)`, transform: 'translate(30%, -30%)' }} />
       <div className="flex items-start justify-between">
@@ -46,6 +47,7 @@ function VibrantStat({
       </div>
     </div>
   );
+  return href ? <Link href={href}>{inner}</Link> : inner;
 }
 
 // ─── Risk register row ────────────────────────────────────────────────────────
@@ -54,12 +56,16 @@ function RiskRow({ obj, teamColor, teamName }: { obj: Objective; teamColor: stri
   const isBehind = obj.status === 'behind';
   const accent   = isBehind ? '#ef4444' : '#f59e0b';
   return (
-    <div className="flex items-center gap-4 p-3.5 rounded-xl border transition-all duration-150 hover:border-white/[0.1]"
+    <Link href="/views"
+      className="flex items-center gap-4 p-3.5 rounded-xl border transition-all duration-150 hover:-translate-y-0.5"
       style={{
         background: `linear-gradient(135deg, ${accent}0a, rgba(14,26,50,0.6))`,
         borderColor: `${accent}30`,
         boxShadow: `0 0 0 1px ${accent}15`,
-      }}>
+      }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${accent}55`; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = `${accent}30`; }}
+    >
       <span className="flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full shrink-0 uppercase tracking-wide"
         style={{ background: accent + '20', color: accent, border: `1px solid ${accent}40` }}>
         {isBehind ? <TrendingUp size={9} /> : <Zap size={9} />}
@@ -80,7 +86,7 @@ function RiskRow({ obj, teamColor, teamName }: { obj: Objective; teamColor: stri
         </div>
         <ProgressBar progress={obj.progress} color={accent} height={4} />
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -175,7 +181,8 @@ export default function CompanyDashboard() {
 
         {/* ── Hero ── */}
         <div className="flex flex-col sm:flex-row items-stretch gap-5">
-          <div className="rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shrink-0 w-full sm:w-auto"
+          <Link href="/views"
+            className="rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shrink-0 w-full sm:w-auto transition-all duration-200 hover:-translate-y-0.5 group"
             style={{
               background: 'linear-gradient(145deg, rgba(42,207,192,0.1), rgba(14,28,54,0.95))',
               border: '1px solid rgba(42,207,192,0.2)',
@@ -183,27 +190,27 @@ export default function CompanyDashboard() {
               minWidth: 190,
             }}>
             <ProgressRing progress={data.overallProgress} size={148} strokeWidth={12} label="Overall" sublabel={`${data.quarter} ${data.year}`} />
-            <p className="text-xs text-slate-500">Company progress</p>
-          </div>
+            <p className="text-xs text-slate-500 group-hover:text-slate-300 transition-colors">View all OKRs →</p>
+          </Link>
 
           <div className="grid grid-cols-2 gap-3 flex-1">
             <VibrantStat label="Total Objectives" value={data.objectives.length}
               sub={`Across ${data.teams.length} teams`} color="#2acfc0"
               gradient="linear-gradient(135deg, rgba(42,207,192,0.14), rgba(14,28,54,0.9))"
-              icon={Target} trend={{ value: 12, label: 'vs Q1' }} />
+              icon={Target} trend={{ value: 12, label: 'vs Q1' }} href="/views" />
             <VibrantStat label="On Track" value={onTrackCount}
               sub={`${Math.round((onTrackCount / Math.max(data.objectives.length, 1)) * 100)}% of objectives`}
               color="#10b981"
               gradient="linear-gradient(135deg, rgba(16,185,129,0.14), rgba(14,28,54,0.9))"
-              icon={CheckCircle2} />
+              icon={CheckCircle2} href="/views" />
             <VibrantStat label="At Risk" value={atRiskCount} sub="Need attention now"
               color="#f59e0b"
               gradient="linear-gradient(135deg, rgba(245,158,11,0.14), rgba(14,28,54,0.9))"
-              icon={AlertTriangle} />
+              icon={AlertTriangle} href="/views" />
             <VibrantStat label="Behind" value={behindCount} sub="Require escalation"
               color="#ef4444"
               gradient="linear-gradient(135deg, rgba(239,68,68,0.14), rgba(14,28,54,0.9))"
-              icon={TrendingUp} />
+              icon={TrendingUp} href="/views" />
           </div>
         </div>
 

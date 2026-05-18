@@ -5,6 +5,7 @@ import { StatusBadge } from '@/components/ui/Badge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { progressColor } from '@/lib/utils';
 import { useOKR } from '@/contexts/OKRContext';
+import { useTheme } from '@/contexts/SettingsContext';
 import { Link2, ChevronRight } from 'lucide-react';
 
 // Build adjacency list
@@ -35,10 +36,12 @@ interface TreeNodeProps {
 
 function TreeNode({ objective, depth, isLast, parentLines, childMap, onSelect }: TreeNodeProps) {
   const { data } = useOKR();
+  const { isDark } = useTheme();
   const team = data?.teams.find(t => t.id === objective.teamId);
   const children = childMap.get(objective.id) ?? [];
   const color = progressColor(objective.progress);
   const accentColor = team?.color ?? color;
+  const lineColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.12)';
 
   return (
     <div>
@@ -52,7 +55,7 @@ function TreeNode({ objective, depth, isLast, parentLines, childMap, onSelect }:
           {parentLines.map((hasLine, i) => (
             <div key={i} className="shrink-0 flex justify-center" style={{ width: 24 }}>
               {hasLine && i < depth - 1 && (
-                <div className="w-px h-full" style={{ background: 'rgba(255,255,255,0.07)', minHeight: 40 }} />
+                <div className="w-px h-full" style={{ background: lineColor, minHeight: 40 }} />
               )}
             </div>
           ))}
@@ -62,10 +65,10 @@ function TreeNode({ objective, depth, isLast, parentLines, childMap, onSelect }:
         {depth > 0 && (
           <div className="flex items-center shrink-0" style={{ width: 24, marginLeft: -24 + (depth - 1) * 24 }}>
             <div className="flex flex-col items-center" style={{ height: 40 }}>
-              <div className="w-px flex-1" style={{ background: isLast ? 'transparent' : 'rgba(255,255,255,0.07)' }} />
-              <div className="w-px flex-1" style={{ background: 'rgba(255,255,255,0.07)' }} />
+              <div className="w-px flex-1" style={{ background: isLast ? 'transparent' : lineColor }} />
+              <div className="w-px flex-1" style={{ background: lineColor }} />
             </div>
-            <div className="h-px w-3" style={{ background: 'rgba(255,255,255,0.1)' }} />
+            <div className="h-px w-3" style={{ background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.14)' }} />
           </div>
         )}
 
@@ -156,7 +159,7 @@ export function TreeView({ objectives, onSelect }: { objectives: Objective[]; on
 
           {/* Tree */}
           <div className="rounded-2xl border border-white/[0.05] overflow-hidden"
-            style={{ background: 'rgba(14,26,50,0.6)' }}>
+            style={{ background: 'var(--surface-bg)' }}>
             {roots.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-slate-600 text-sm">No objectives yet.</p>

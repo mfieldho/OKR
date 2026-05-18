@@ -33,7 +33,7 @@ function GridCard({ objective, onSelect }: { objective: Objective; onSelect: () 
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)';
+        (e.currentTarget as HTMLElement).style.borderColor = '';
       }}>
 
       {/* Team colour banner */}

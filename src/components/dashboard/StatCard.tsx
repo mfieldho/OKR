@@ -14,7 +14,7 @@ interface StatCardProps {
 export function StatCard({ label, value, sub, icon: Icon, color, trend }: StatCardProps) {
   return (
     <div className="rounded-2xl p-5 flex flex-col gap-4 border border-white/[0.06] hover:border-white/10 transition-colors"
-      style={{ background: 'rgba(30,45,76,0.6)' }}>
+      style={{ background: 'var(--card-bg)' }}>
       <div className="flex items-start justify-between">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center"
           style={{ background: `${color}18`, border: `1px solid ${color}30` }}>

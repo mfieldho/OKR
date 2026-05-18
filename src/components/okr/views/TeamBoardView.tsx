@@ -11,7 +11,7 @@ function TeamCard({ objective, onSelect }: { objective: Objective; onSelect: () 
   return (
     <button onClick={onSelect}
       className="w-full text-left group p-3.5 rounded-xl border border-white/[0.05] hover:border-white/[0.16] transition-all"
-      style={{ background: 'rgba(15,28,50,0.8)' }}>
+      style={{ background: 'var(--card-bg)' }}>
       <div className="flex items-start gap-2.5 mb-2.5">
         <ProgressRing progress={objective.progress} size={36} strokeWidth={4}
           color={progressColor(objective.progress)} label="" />

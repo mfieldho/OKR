@@ -69,7 +69,7 @@ export default function OKRsSettingsPage() {
           <h2 className="text-base font-semibold text-white">Default Cadence</h2>
           <p className="text-xs text-slate-500 mt-0.5">Sets the default when creating a new OKR — can be overridden per objective</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'var(--card-bg)' }}>
           <div className="grid grid-cols-2 gap-2">
             {optionBtn((settings.defaultCadence ?? 'quarterly') === 'quarterly',
               () => updateSettings({ defaultCadence: 'quarterly' }),
@@ -101,7 +101,7 @@ export default function OKRsSettingsPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] overflow-hidden" style={{ background: 'var(--card-bg)' }}>
           {/* Header */}
           <div className="grid px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-semibold uppercase tracking-wider text-slate-500"
             style={{ gridTemplateColumns: '80px 1fr 1fr 72px' }}>
@@ -175,7 +175,7 @@ export default function OKRsSettingsPage() {
           <h2 className="text-base font-semibold text-white">Scoring Method</h2>
           <p className="text-xs text-slate-500 mt-0.5">How key result progress is measured</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'var(--card-bg)' }}>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Scoring type</p>
           <div className="space-y-2">
             {optionBtn(settings.okrScoring === 'percentage', () => updateSettings({ okrScoring: 'percentage' }),
@@ -202,7 +202,7 @@ export default function OKRsSettingsPage() {
           <h2 className="text-base font-semibold text-white">Grade Thresholds</h2>
           <p className="text-xs text-slate-500 mt-0.5">Define when an OKR is considered on track, at risk, or behind</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'var(--card-bg)' }}>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5">Green threshold (on track)</label>
@@ -261,7 +261,7 @@ export default function OKRsSettingsPage() {
           <h2 className="text-base font-semibold text-white">Check-in Frequency</h2>
           <p className="text-xs text-slate-500 mt-0.5">How often teams should update their OKR progress</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-3" style={{ background: 'var(--card-bg)' }}>
           <div className="grid grid-cols-3 gap-2">
             {optionBtn(settings.checkInFrequency === 'weekly', () => updateSettings({ checkInFrequency: 'weekly' }),
               <div><div className="font-semibold">Weekly</div><p className="text-xs text-slate-500 font-normal mt-0.5">Every week</p></div>
@@ -284,7 +284,7 @@ export default function OKRsSettingsPage() {
           <h2 className="text-base font-semibold text-white">Confidence Scoring</h2>
           <p className="text-xs text-slate-500 mt-0.5">Allow teams to self-report confidence level on each key result</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'var(--card-bg)' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-white">Show confidence indicator</p>

@@ -75,7 +75,7 @@ function QuickAddObjective({ teamId, onSave, onCancel }: {
 
   return (
     <div className="rounded-xl border border-white/[0.08] p-4 space-y-3 mt-3"
-      style={{ background: 'rgba(30,45,76,0.7)' }}>
+      style={{ background: 'var(--card-bg)' }}>
       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">New Objective</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
@@ -91,14 +91,14 @@ function QuickAddObjective({ teamId, onSave, onCancel }: {
         <div>
           <label className="block text-xs text-slate-400 mb-1">Quarter</label>
           <select value={quarter} onChange={e => setQuarter(e.target.value as Quarter)}
-            className={`w-full ${cls}`} style={{ background: 'rgba(30,45,76,0.9)' }}>
+            className={`w-full ${cls}`} style={{ background: 'var(--card-bg)' }}>
             {QUARTERS.map(q => <option key={q} value={q}>{q}</option>)}
           </select>
         </div>
         <div>
           <label className="block text-xs text-slate-400 mb-1">Status</label>
           <select value={status} onChange={e => setStatus(e.target.value as OKRStatus)}
-            className={`w-full ${cls}`} style={{ background: 'rgba(30,45,76,0.9)' }}>
+            className={`w-full ${cls}`} style={{ background: 'var(--card-bg)' }}>
             {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
           </select>
         </div>
@@ -133,7 +133,7 @@ interface TeamFormFieldsProps {
 
 function TeamFormFields({ form, onChange, onSave, onCancel, saveLabel }: TeamFormFieldsProps) {
   return (
-    <div className="mt-3 p-4 rounded-xl border border-white/[0.08] space-y-3" style={{ background: 'rgba(30,45,76,0.6)' }}>
+    <div className="mt-3 p-4 rounded-xl border border-white/[0.08] space-y-3" style={{ background: 'var(--card-bg)' }}>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-medium text-slate-400 mb-1.5">Team name</label>
@@ -264,7 +264,7 @@ export default function TeamsSettingsPage() {
 
         {/* Add new team form */}
         {addingNew && (
-          <div className="rounded-2xl border border-white/[0.1] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+          <div className="rounded-2xl border border-white/[0.1] p-5" style={{ background: 'var(--card-bg)' }}>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">New team</p>
             <TeamFormFields form={form} onChange={setForm} onSave={saveNew} onCancel={cancelEdit} saveLabel="Add team" />
           </div>
@@ -281,7 +281,7 @@ export default function TeamsSettingsPage() {
 
             return (
               <div key={team.id} className="rounded-2xl border border-white/[0.06] overflow-hidden"
-                style={{ background: 'rgba(30,45,76,0.5)' }}>
+                style={{ background: 'var(--card-bg)' }}>
 
                 {/* Team header */}
                 <div className="flex items-center gap-3 p-4">
@@ -421,7 +421,7 @@ export default function TeamsSettingsPage() {
         </div>
 
         {settings.teams.length === 0 && !addingNew && (
-          <div className="rounded-2xl border border-white/[0.06] p-8 text-center" style={{ background: 'rgba(30,45,76,0.5)' }}>
+          <div className="rounded-2xl border border-white/[0.06] p-8 text-center" style={{ background: 'var(--card-bg)' }}>
             <p className="text-slate-500 text-sm">No teams configured yet.</p>
             <button onClick={() => setAddingNew(true)}
               className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium mx-auto transition-all"

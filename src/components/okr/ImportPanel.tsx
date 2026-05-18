@@ -171,7 +171,7 @@ export function ImportPanel({ onClose }: ImportPanelProps) {
         onClick={onClose} />
 
       <div className="fixed right-0 top-0 h-full z-50 flex flex-col border-l border-white/[0.08] shadow-2xl"
-        style={{ width: 'min(560px, 100vw)', background: 'rgba(10,20,38,0.99)', backdropFilter: 'blur(20px)' }}>
+        style={{ width: 'min(560px, 100vw)', background: 'var(--panel-bg)', backdropFilter: 'blur(20px)' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">

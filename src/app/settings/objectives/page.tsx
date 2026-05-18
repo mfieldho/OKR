@@ -91,7 +91,7 @@ function SelectField({ label, value, onChange, options }: {
       <label className="block text-xs font-medium text-slate-400 mb-1">{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)}
         className="w-full px-3 py-2 rounded-xl text-sm text-white border border-white/[0.08] focus:border-white/20 focus:outline-none transition-colors"
-        style={{ background: 'rgba(30,45,76,0.9)' }}>
+        style={{ background: 'var(--card-bg)' }}>
         {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
     </div>
@@ -186,7 +186,7 @@ function ObjectiveForm({ objective, teams, onSave, onCancel }: {
   };
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.6)' }}>
+    <div className="rounded-2xl border border-white/[0.08] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
         {objective.id ? 'Edit Objective' : 'New Objective'}
       </p>
@@ -360,7 +360,7 @@ export default function ObjectivesSettingsPage() {
       <div className="space-y-3">
         {objectives.length === 0 && !addingObj && (
           <div className="rounded-2xl border border-white/[0.06] p-8 text-center"
-            style={{ background: 'rgba(30,45,76,0.3)' }}>
+            style={{ background: 'var(--card-bg)' }}>
             <p className="text-slate-500 text-sm">No objectives for {activeQ}.</p>
             <button onClick={() => setAddingObj(true)} className="mt-3 text-xs text-[#2acfc0] hover:underline">
               + Add the first objective
@@ -375,7 +375,7 @@ export default function ObjectivesSettingsPage() {
 
           return (
             <div key={obj.id} className="rounded-2xl border border-white/[0.06] overflow-hidden transition-all"
-              style={{ background: 'rgba(30,45,76,0.5)' }}>
+              style={{ background: 'var(--card-bg)' }}>
 
               {isEditing ? (
                 <div className="p-4">

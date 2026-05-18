@@ -22,7 +22,7 @@ export default function ViewsPage() {
 
   if (loading) return (
     <div className="flex-1">
-      <div className="h-[57px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} />
+      <div className="h-[57px] border-b border-white/[0.06]" style={{ background: 'var(--header-bg)' }} />
       <LoadingSkeleton />
     </div>
   );
@@ -45,7 +45,7 @@ export default function ViewsPage() {
       {/* View type selector — horizontal tab bar */}
       <div
         className="flex items-center gap-1 px-4 sm:px-6 py-3 border-b border-white/[0.06] overflow-x-auto"
-        style={{ background: 'rgba(13,26,46,0.7)', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        style={{ background: 'var(--nav-bg)', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
         {VIEW_TABS.map(({ id, Icon, label }) => (
           <button

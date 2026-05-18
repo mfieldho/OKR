@@ -128,7 +128,7 @@ function IntegrationCard({
   const isConfigured = def.fields.every(f => fieldValues[f.key]?.trim());
 
   return (
-    <div className="rounded-2xl border border-white/[0.06]" style={{ background: 'rgba(30,45,76,0.5)' }}>
+    <div className="rounded-2xl border border-white/[0.06]" style={{ background: 'var(--card-bg)' }}>
       <div className="flex items-start gap-4 p-5">
         {/* Icon */}
         <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"

@@ -43,7 +43,7 @@ export default function CalendarSettingsPage() {
         </div>
 
         {/* Year type */}
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Year type</p>
           <div className="grid grid-cols-2 gap-3">
             {optionBtn(settings.yearType === 'calendar', () => updateSettings({ yearType: 'calendar' as YearType }),
@@ -63,7 +63,7 @@ export default function CalendarSettingsPage() {
 
         {/* FY start month */}
         {settings.yearType === 'financial' && (
-          <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+          <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Financial year start month</p>
             <div className="grid grid-cols-4 gap-2">
               {MONTH_FULL.map((month, idx) => {
@@ -90,7 +90,7 @@ export default function CalendarSettingsPage() {
 
         {/* Year display format */}
         {settings.yearType === 'financial' && (
-          <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+          <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Year label format</p>
             <div className="grid grid-cols-3 gap-3">
               {([
@@ -110,7 +110,7 @@ export default function CalendarSettingsPage() {
         )}
 
         {/* Live preview */}
-        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'var(--card-bg)' }}>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Live preview</p>
           <div className="flex items-center gap-3">
             <span className="text-sm font-semibold text-slate-300">{previewYear}</span>

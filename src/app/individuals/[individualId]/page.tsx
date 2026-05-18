@@ -15,7 +15,7 @@ export default function IndividualPage({ params }: { params: Promise<{ individua
   const { individualId } = use(params);
   const { data, loading } = useOKR();
 
-  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} /><LoadingSkeleton /></>;
+  if (loading) return <><div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'var(--header-bg)' }} /><LoadingSkeleton /></>;
   if (!data) return null;
 
   const person = data.individuals.find(p => p.id === individualId);
@@ -36,7 +36,7 @@ export default function IndividualPage({ params }: { params: Promise<{ individua
         {/* Hero */}
         <div className="flex items-center gap-6">
           <div className="rounded-2xl border border-white/[0.06] p-6 flex flex-col items-center gap-2"
-            style={{ background: 'rgba(30,45,76,0.5)' }}>
+            style={{ background: 'var(--card-bg)' }}>
             <div className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold text-white mb-2"
               style={{ background: `${progressColor(person.progress)}33`, border: `2px solid ${progressColor(person.progress)}55` }}>
               {person.name.split(' ').map(n => n[0]).join('')}
@@ -45,15 +45,15 @@ export default function IndividualPage({ params }: { params: Promise<{ individua
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'var(--card-bg)' }}>
               <p className="text-2xl font-bold text-white">{person.objectives.length}</p>
               <p className="text-sm text-slate-400 mt-1">Objectives</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'var(--card-bg)' }}>
               <p className="text-2xl font-bold text-emerald-400">{onTrack}</p>
               <p className="text-sm text-slate-400 mt-1">On track</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+            <div className="rounded-2xl border border-white/[0.06] p-4" style={{ background: 'var(--card-bg)' }}>
               <p className="text-2xl font-bold text-white">{allKRs.length}</p>
               <p className="text-sm text-slate-400 mt-1">Key results</p>
             </div>

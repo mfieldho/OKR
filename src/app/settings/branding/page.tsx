@@ -112,7 +112,7 @@ export default function BrandingPage() {
           <p className="text-xs text-slate-500 mt-0.5">Shown in the sidebar and dashboard header</p>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company name</p>
           <input
             type="text"
@@ -147,7 +147,7 @@ export default function BrandingPage() {
           <p className="text-xs text-slate-500 mt-0.5">Used for highlights, active states, and interactive elements</p>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'var(--card-bg)' }}>
           <ColorPicker
             value={draft.accentColor}
             onChange={c => setDraft(d => ({ ...d, accentColor: c }))}
@@ -199,7 +199,7 @@ export default function BrandingPage() {
           <p className="text-xs text-slate-500 mt-0.5">The background colour of the main navigation sidebar</p>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-5" style={{ background: 'var(--card-bg)' }}>
           <ColorPicker
             value={draft.sidebarBg}
             onChange={c => setDraft(d => ({ ...d, sidebarBg: c }))}

@@ -57,14 +57,14 @@ export default function DataConnectionPage() {
         </div>
 
         {/* Azure AD */}
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
           <p className="text-sm font-semibold text-white">Azure AD / Microsoft 365</p>
           {spField('Tenant ID', 'tenantId', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')}
           {spField('Client ID (Application ID)', 'clientId', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')}
         </div>
 
         {/* SharePoint file */}
-        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5 space-y-4" style={{ background: 'var(--card-bg)' }}>
           <p className="text-sm font-semibold text-white">SharePoint / OneDrive File</p>
           {spField('SharePoint Site URL', 'siteUrl', 'https://form3.sharepoint.com/sites/okr', 'The site where your Excel file lives')}
           {spField('Table name in Excel', 'listName', 'OKRTable')}
@@ -73,7 +73,7 @@ export default function DataConnectionPage() {
         </div>
 
         {/* Generated env */}
-        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(30,45,76,0.5)' }}>
+        <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'var(--card-bg)' }}>
           <p className="text-sm font-semibold text-white mb-3">Generated .env.local</p>
           <pre className="text-xs text-teal-400 leading-relaxed overflow-x-auto p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.3)' }}>
 {`NEXT_PUBLIC_AZURE_TENANT_ID=${form.tenantId || '<your-tenant-id>'}

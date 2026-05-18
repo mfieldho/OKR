@@ -3,6 +3,7 @@
 import { Target, TrendingUp, AlertTriangle, CheckCircle2, Flame, Users, ArrowRight, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useOKR } from '@/contexts/OKRContext';
+import { useTheme } from '@/contexts/SettingsContext';
 import { Header } from '@/components/layout/Header';
 import { ProgressRing } from '@/components/ui/ProgressRing';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -15,14 +16,20 @@ import type { Objective, Team } from '@/lib/types';
 // ─── Vibrant stat card ────────────────────────────────────────────────────────
 
 function VibrantStat({
-  label, value, sub, color, gradient, icon: Icon, trend, href,
+  label, value, sub, color, icon: Icon, trend, href,
 }: {
   label: string; value: number | string; sub: string;
-  color: string; gradient: string;
+  color: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   trend?: { value: number; label: string };
   href?: string;
 }) {
+  const { isDark } = useTheme();
+  const gradient = isDark
+    ? `linear-gradient(135deg, ${color}24, rgba(14,28,54,0.92))`
+    : `linear-gradient(135deg, ${color}18, rgba(255,255,255,0.97))`;
+  const subColor = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)';
+  const trendBg  = isDark ? 'rgba(0,0,0,0.2)' : `${color}18`;
   const inner = (
     <div className="relative rounded-2xl overflow-hidden p-5 flex flex-col gap-2 transition-all duration-200 hover:-translate-y-0.5"
       style={{ background: gradient, boxShadow: `0 4px 24px ${color}28, inset 0 1px 0 rgba(255,255,255,0.08)`, border: `1px solid ${color}35`, cursor: href ? 'pointer' : 'default' }}>
@@ -35,7 +42,7 @@ function VibrantStat({
         </div>
         {trend && (
           <span className="text-[10px] font-bold px-2 py-1 rounded-full"
-            style={{ background: 'rgba(0,0,0,0.2)', color }}>
+            style={{ background: trendBg, color }}>
             +{trend.value}% {trend.label}
           </span>
         )}
@@ -43,7 +50,7 @@ function VibrantStat({
       <div>
         <p className="text-3xl font-black text-white tabular-nums leading-none">{value}</p>
         <p className="text-xs font-semibold mt-1" style={{ color }}>{label}</p>
-        <p className="text-[11px] text-white/50 mt-0.5">{sub}</p>
+        <p className="text-[11px] mt-0.5" style={{ color: subColor }}>{sub}</p>
       </div>
     </div>
   );
@@ -53,13 +60,17 @@ function VibrantStat({
 // ─── Risk register row ────────────────────────────────────────────────────────
 
 function RiskRow({ obj, teamColor, teamName }: { obj: Objective; teamColor: string; teamName: string }) {
+  const { isDark } = useTheme();
   const isBehind = obj.status === 'behind';
   const accent   = isBehind ? '#ef4444' : '#f59e0b';
+  const rowBg    = isDark
+    ? `linear-gradient(135deg, ${accent}0d, rgba(14,26,50,0.65))`
+    : `linear-gradient(135deg, ${accent}0d, rgba(255,255,255,0.95))`;
   return (
     <Link href="/views"
       className="flex items-center gap-4 p-3.5 rounded-xl border transition-all duration-150 hover:-translate-y-0.5"
       style={{
-        background: `linear-gradient(135deg, ${accent}0a, rgba(14,26,50,0.6))`,
+        background: rowBg,
         borderColor: `${accent}30`,
         boxShadow: `0 0 0 1px ${accent}15`,
       }}
@@ -93,15 +104,19 @@ function RiskRow({ obj, teamColor, teamName }: { obj: Objective; teamColor: stri
 // ─── Vivid team card ──────────────────────────────────────────────────────────
 
 function VividTeamCard({ team }: { team: Team }) {
+  const { isDark } = useTheme();
   const onTrack = team.objectives.filter(o => o.status === 'on-track' || o.status === 'completed').length;
   const atRisk  = team.objectives.filter(o => o.status === 'at-risk' || o.status === 'behind').length;
+  const cardBg  = isDark
+    ? `linear-gradient(145deg, ${team.color}14, ${team.color}07, rgba(10,20,40,0.85))`
+    : `linear-gradient(145deg, ${team.color}0f, ${team.color}06, rgba(255,255,255,0.97))`;
   return (
     <Link href={`/teams/${team.id}`}
       className="group relative rounded-2xl overflow-hidden border transition-all duration-200 hover:-translate-y-1 flex flex-col"
       style={{
-        background: `linear-gradient(145deg, ${team.color}12, ${team.color}06, rgba(10,20,40,0.8))`,
+        background: cardBg,
         borderColor: `${team.color}28`,
-        boxShadow: `0 4px 20px ${team.color}10`,
+        boxShadow: `0 4px 20px ${team.color}12`,
       }}>
       <div style={{ height: 3, background: `linear-gradient(90deg, ${team.color}, ${team.color}55)` }} />
       <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none"
@@ -145,10 +160,11 @@ function VividTeamCard({ team }: { team: Team }) {
 
 export default function CompanyDashboard() {
   const { data, loading, error } = useOKR();
+  const { isDark } = useTheme();
 
   if (loading) return (
     <div className="flex-1">
-      <div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'rgba(13,26,46,0.90)' }} />
+      <div className="h-[73px] border-b border-white/[0.06]" style={{ background: 'var(--header-bg)' }} />
       <LoadingSkeleton />
     </div>
   );
@@ -184,9 +200,9 @@ export default function CompanyDashboard() {
           <Link href="/views"
             className="rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shrink-0 w-full sm:w-auto transition-all duration-200 hover:-translate-y-0.5 group"
             style={{
-              background: 'linear-gradient(145deg, rgba(42,207,192,0.1), rgba(14,28,54,0.95))',
-              border: '1px solid rgba(42,207,192,0.2)',
-              boxShadow: '0 8px 32px rgba(42,207,192,0.1)',
+              background: 'var(--hero-panel-bg)',
+              border: '1px solid var(--hero-panel-border)',
+              boxShadow: `0 8px 32px rgba(42,207,192,${isDark ? '0.1' : '0.07'})`,
               minWidth: 190,
             }}>
             <ProgressRing progress={data.overallProgress} size={148} strokeWidth={12} label="Overall" sublabel={`${data.quarter} ${data.year}`} />
@@ -196,21 +212,14 @@ export default function CompanyDashboard() {
           <div className="grid grid-cols-2 gap-3 flex-1">
             <VibrantStat label="Total Objectives" value={data.objectives.length}
               sub={`Across ${data.teams.length} teams`} color="#2acfc0"
-              gradient="linear-gradient(135deg, rgba(42,207,192,0.14), rgba(14,28,54,0.9))"
               icon={Target} trend={{ value: 12, label: 'vs Q1' }} href="/views" />
             <VibrantStat label="On Track" value={onTrackCount}
               sub={`${Math.round((onTrackCount / Math.max(data.objectives.length, 1)) * 100)}% of objectives`}
-              color="#10b981"
-              gradient="linear-gradient(135deg, rgba(16,185,129,0.14), rgba(14,28,54,0.9))"
-              icon={CheckCircle2} href="/views" />
+              color="#10b981" icon={CheckCircle2} href="/views" />
             <VibrantStat label="At Risk" value={atRiskCount} sub="Need attention now"
-              color="#f59e0b"
-              gradient="linear-gradient(135deg, rgba(245,158,11,0.14), rgba(14,28,54,0.9))"
-              icon={AlertTriangle} href="/views" />
+              color="#f59e0b" icon={AlertTriangle} href="/views" />
             <VibrantStat label="Behind" value={behindCount} sub="Require escalation"
-              color="#ef4444"
-              gradient="linear-gradient(135deg, rgba(239,68,68,0.14), rgba(14,28,54,0.9))"
-              icon={TrendingUp} href="/views" />
+              color="#ef4444" icon={TrendingUp} href="/views" />
           </div>
         </div>
 
@@ -225,7 +234,7 @@ export default function CompanyDashboard() {
           <section>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.15))', border: '1px solid rgba(245,158,11,0.3)' }}>
+                style={{ background: isDark ? 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.15))' : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.1))', border: '1px solid rgba(245,158,11,0.3)' }}>
                 <Flame size={15} className="text-amber-400" />
               </div>
               <div>

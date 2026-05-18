@@ -119,3 +119,18 @@ export function useSettings() {
   if (!ctx) throw new Error('useSettings must be used within SettingsProvider');
   return ctx;
 }
+
+/** Convenience hook — returns theme state and a one-call toggle. */
+export function useTheme() {
+  const { settings, updateSettings } = useSettings();
+  const isDark = (settings.colorScheme ?? 'dark') === 'dark';
+  return {
+    isDark,
+    isLight: !isDark,
+    theme: (settings.colorScheme ?? 'dark') as 'dark' | 'light',
+    toggle: () => updateSettings({
+      colorScheme: isDark ? 'light' : 'dark',
+      sidebarBg:   isDark ? '#1e293b' : '#0d1a2e',
+    }),
+  };
+}

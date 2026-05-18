@@ -189,19 +189,19 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
         </button>
         <button onClick={() => { setImporting(true); setAddingNew(false); }}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
-          style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}>
+          style={{ background: 'var(--btn-ghost-bg)', color: 'var(--btn-ghost-color)', border: '1px solid var(--btn-ghost-border)' }}>
           <Upload size={14} /> Import
         </button>
         <button onClick={() => exportCSV(filtered, teams)}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
-          style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}>
+          style={{ background: 'var(--btn-ghost-bg)', color: 'var(--btn-ghost-color)', border: '1px solid var(--btn-ghost-border)' }}>
           <Download size={14} /> Export
         </button>
         <button onClick={() => setShowFilter(v => !v)}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
           style={showFilter || dirty
             ? { background: 'rgba(42,207,192,0.1)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.25)' }
-            : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}>
+            : { background: 'var(--btn-ghost-bg)', color: 'var(--btn-ghost-color)', border: '1px solid var(--btn-ghost-border)' }}>
           <SlidersHorizontal size={14} /> Filter{dirty ? ` (${filtered.length})` : ''}
         </button>
         <span className="text-xs text-slate-600 ml-auto">
@@ -213,8 +213,8 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
 
       {/* ── Filter bar ── */}
       {showFilter && (
-        <div className="mb-4 p-4 rounded-2xl border border-white/[0.07] flex flex-wrap gap-3 items-end"
-          style={{ background: 'rgba(20,35,60,0.6)' }}>
+        <div className="mb-4 p-4 rounded-2xl border flex flex-wrap gap-3 items-end"
+          style={{ background: 'var(--filter-bar-bg)', borderColor: 'var(--border-subtle)' }}>
 
           {/* Text search */}
           <div className="relative flex-1 min-w-44">
@@ -223,8 +223,8 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
               value={filter.search}
               onChange={e => setF('search', e.target.value)}
               placeholder="Search objectives, KRs, owners…"
-              className="w-full pl-8 pr-3 py-2 rounded-xl text-sm text-white placeholder-slate-600 border border-white/[0.08] focus:border-white/20 focus:outline-none"
-              style={{ background: 'rgba(255,255,255,0.04)' }}
+              className="w-full pl-8 pr-3 py-2 rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none transition-colors"
+              style={{ background: 'var(--input-bg)', border: '1px solid var(--border-input)' }}
             />
             {filter.search && (
               <button onClick={() => setF('search', '')}
@@ -251,12 +251,13 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
           <input value={filter.owner} onChange={e => setF('owner', e.target.value)}
             placeholder="Filter by owner…"
             className={`${SEL} min-w-36`}
-            style={{ background: 'rgba(255,255,255,0.04)' }} />
+            style={{ background: 'var(--input-bg)' }} />
 
           {/* Clear */}
           {dirty && (
             <button onClick={() => setFilter(DEFAULT_FILTER)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs text-slate-500 hover:text-slate-300 border border-white/[0.07] transition-colors">
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs text-slate-500 hover:text-slate-300 transition-colors"
+              style={{ border: '1px solid var(--border-subtle)' }}>
               <X size={11} /> Clear
             </button>
           )}
@@ -271,7 +272,7 @@ export function OKRViewSwitcher({ objectives }: OKRViewSwitcherProps) {
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
             style={groupBy === opt.id
               ? { background: 'rgba(42,207,192,0.15)', color: '#2acfc0', border: '1px solid rgba(42,207,192,0.3)' }
-              : { background: 'var(--input-bg)', color: '#64748b', border: '1px solid var(--border-subtle)' }}>
+              : { background: 'var(--btn-ghost-bg)', color: 'var(--btn-ghost-color)', border: '1px solid var(--btn-ghost-border)' }}>
             {opt.label}
           </button>
         ))}

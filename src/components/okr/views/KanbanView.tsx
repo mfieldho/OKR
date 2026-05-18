@@ -5,6 +5,7 @@ import { Objective, KeyResult, OKRStatus } from '@/lib/types';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useOKR } from '@/contexts/OKRContext';
 import { Zap, TrendingDown, CheckCircle2 } from 'lucide-react';
+import { useTheme } from '@/contexts/SettingsContext';
 
 // ─── Group-by types (exported for shared use) ─────────────────────────────────
 
@@ -139,7 +140,7 @@ function KRRow({ kr }: { kr: KeyResult }) {
         <span className="text-[10px] text-slate-400 flex-1 truncate leading-none">{kr.title}</span>
         <span className="text-[10px] font-bold shrink-0 tabular-nums" style={{ color }}>{kr.progress}%</span>
       </div>
-      <div className="h-[3px] rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      <div className="h-[3px] rounded-full overflow-hidden" style={{ background: 'var(--okr-track-bg)' }}>
         <div className="h-full rounded-full" style={{ width: `${kr.progress}%`, background: `linear-gradient(90deg, ${color}bb, ${color})` }} />
       </div>
     </div>
@@ -154,19 +155,20 @@ function KanbanCard({ objective, accentColor, onSelect }: {
   onSelect: () => void;
 }) {
   const { data } = useOKR();
+  const { isDark } = useTheme();
   const team       = data?.teams.find(t => t.id === objective.teamId);
   const isBehind   = objective.status === 'behind';
   const isAtRisk   = objective.status === 'at-risk';
   const isComplete = objective.status === 'completed';
 
-  const borderColor = isBehind ? '#ef4444' : isAtRisk ? '#f59e0b' : isComplete ? 'rgba(42,207,192,0.3)' : 'rgba(255,255,255,0.07)';
+  const borderColor = isBehind ? '#ef4444' : isAtRisk ? '#f59e0b' : isComplete ? 'rgba(42,207,192,0.3)' : 'var(--okr-card-border)';
   const boxShadow   = isBehind
     ? '0 0 0 1px rgba(239,68,68,0.5), 0 8px 32px rgba(239,68,68,0.2)'
     : isAtRisk
       ? '0 0 0 1px rgba(245,158,11,0.45), 0 8px 32px rgba(245,158,11,0.15)'
       : isComplete
         ? '0 4px 16px rgba(42,207,192,0.08)'
-        : '0 2px 12px rgba(0,0,0,0.25)';
+        : isDark ? '0 2px 12px rgba(0,0,0,0.25)' : '0 2px 8px rgba(0,0,0,0.07)';
 
   const displayKRs = objective.keyResults.slice(0, 3);
 
@@ -175,7 +177,7 @@ function KanbanCard({ objective, accentColor, onSelect }: {
       <div
         className="rounded-xl overflow-hidden border transition-all duration-200 group-hover:-translate-y-1"
         style={{
-          background: 'linear-gradient(145deg, rgba(14,28,54,0.97), rgba(18,34,66,0.93))',
+          background: 'var(--okr-card-bg)',
           borderColor,
           boxShadow,
         }}
@@ -262,8 +264,8 @@ function KRCard({ kr, accentColor, onSelect }: {
       <div
         className="rounded-xl border overflow-hidden transition-all duration-200 group-hover:-translate-y-0.5"
         style={{
-          background: 'linear-gradient(145deg, rgba(14,28,54,0.97), rgba(18,34,66,0.93))',
-          borderColor: kr.status === 'behind' ? '#ef4444' : kr.status === 'at-risk' ? '#f59e0b' : 'rgba(255,255,255,0.07)',
+          background: 'var(--okr-card-bg)',
+          borderColor: kr.status === 'behind' ? '#ef4444' : kr.status === 'at-risk' ? '#f59e0b' : 'var(--okr-card-border)',
           boxShadow: kr.status === 'behind'
             ? '0 0 0 1px rgba(239,68,68,0.4), 0 4px 16px rgba(239,68,68,0.15)'
             : kr.status === 'at-risk'
@@ -348,6 +350,7 @@ export function KanbanView({
   groupBy: GroupBy;
 }) {
   const { data } = useOKR();
+  const { isDark } = useTheme();
   const teams = data?.teams ?? [];
 
   const columns = useMemo(
@@ -371,14 +374,13 @@ export function KanbanView({
           const behindKRs  = obj.keyResults.filter(k => k.status === 'behind').length;
 
           return (
-            <div key={obj.id} className="shrink-0 flex flex-col rounded-2xl overflow-hidden border border-white/[0.05]"
-              style={{ width: 280 }}>
+            <div key={obj.id} className="shrink-0 flex flex-col rounded-2xl overflow-hidden border"
+              style={{ width: 280, borderColor: 'var(--okr-card-border)' }}>
               {/* Top accent strip */}
               <div style={{ height: 3, background: `linear-gradient(90deg, ${accent}, ${accent}44)` }} />
 
               {/* Column header */}
-              <div className="p-3 border-b border-white/[0.06]"
-                style={{ background: `linear-gradient(180deg, ${accent}18 0%, transparent 100%)` }}>
+              <div className="p-3" style={{ background: `linear-gradient(180deg, ${accent}18 0%, ${isDark ? 'rgba(14,26,50,0.4)' : 'rgba(248,250,252,0.8)'} 100%)`, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div className="flex items-start gap-2 mb-1">
                   <div className="w-2.5 h-2.5 rounded-full shrink-0 mt-0.5"
                     style={{ background: accent, boxShadow: `0 0 8px ${accent}99` }} />
@@ -405,7 +407,7 @@ export function KanbanView({
               </div>
 
               {/* KR cards */}
-              <div className="p-2 space-y-2 overflow-y-auto" style={{ background: accent + '08', maxHeight: BODY_HEIGHT }}>
+              <div className="p-2 space-y-2 overflow-y-auto" style={{ background: isDark ? accent + '08' : accent + '06', maxHeight: BODY_HEIGHT }}>
                 {obj.keyResults.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 gap-2">
                     <div className="w-7 h-7 rounded-full border border-dashed border-white/[0.12]" />

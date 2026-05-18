@@ -2,11 +2,11 @@
 
 import { usePathname } from 'next/navigation';
 import { useOKR } from '@/contexts/OKRContext';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings, useTheme } from '@/contexts/SettingsContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { quarterLabel, yearLabel } from '@/lib/calendarSettings';
 import { Quarter } from '@/lib/types';
-import { Menu } from 'lucide-react';
+import { Menu, Sun, Moon } from 'lucide-react';
 
 const quarters: Quarter[] = ['Q1', 'Q2', 'Q3', 'Q4'];
 
@@ -19,6 +19,7 @@ export function Header({ title, subtitle }: HeaderProps) {
   const { selectedQuarter, setSelectedQuarter, data } = useOKR();
   const { settings } = useSettings();
   const { toggle: toggleSidebar } = useSidebar();
+  const { isDark, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
 
   return (
@@ -49,8 +50,22 @@ export function Header({ title, subtitle }: HeaderProps) {
           </span>
         )}
 
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 shrink-0"
+          style={{
+            background: 'var(--btn-ghost-bg)',
+            border: '1px solid var(--btn-ghost-border)',
+            color: isDark ? '#f59e0b' : '#6366f1',
+          }}
+        >
+          {isDark ? <Sun size={14} /> : <Moon size={14} />}
+        </button>
+
         {/* Quarter switcher */}
-        <div className="flex items-center gap-0.5 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        <div className="flex items-center gap-0.5 p-1 rounded-lg q-switcher-bg" style={{ background: 'rgba(255,255,255,0.05)' }}>
           {quarters.map((q, i) => {
             const { q: qLabel, range } = quarterLabel((i + 1) as 1 | 2 | 3 | 4, settings);
             const active = selectedQuarter === q;

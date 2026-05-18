@@ -49,7 +49,7 @@ export function Sidebar() {
           'fixed inset-y-0 left-0 z-50 lg:relative lg:z-auto',
           open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
-        style={{ background: 'rgba(13,26,46,0.97)', backdropFilter: 'blur(12px)' }}
+        style={{ background: 'var(--sidebar-bg, #0d1a2e)', backdropFilter: 'blur(12px)' }}
       >
         {/* Logo + close button (mobile) */}
         <div className="px-5 pt-6 pb-5 border-b border-white/[0.06] flex items-start justify-between shrink-0">
